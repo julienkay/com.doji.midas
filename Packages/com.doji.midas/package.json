@@ -11,5 +11,13 @@
       "name": "Doji Technologies",
       "email": "support@doji-tech.com",
       "url": "https://www.doji-tech.com/"
-   }
+   },
+   "documentationUrl": "https://www.doji-tech.com/midas/",
+   "samples": [
+    {
+      "displayName": "Basic Sample",
+      "description": "Basic example on how to perform depth estimation with an input texture.",
+      "path": "Samples~/01-BasicSample"
+    }
+  ]
 }

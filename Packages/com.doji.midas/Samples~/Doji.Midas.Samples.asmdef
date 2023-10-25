@@ -1,0 +1,17 @@
+{
+    "name": "Doji.Midas.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b30ff40a7fe06d4478549abccd7ba558",
+        "GUID:c98377141161c7746a178fb5cb1af075"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
