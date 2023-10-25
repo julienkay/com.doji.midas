@@ -1,0 +1,65 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "doji.midas.csproj"
+          ],
+          "src": "../"
+        }
+      ],
+      "dest": "api",
+      "includePrivateMembers": false,
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false,
+      "noRestore": false,
+      "namespaceLayout": "flattened",
+      "memberLayout": "samePage",
+      "EnumSortOrder": "declaringOrder",
+      "allowCompilationErrors": false,
+      "globalNamespaceId": "Global",
+      "filter": "filterConfig.yml"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "manual/**.md",
+          "manual/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**",
+        ]
+      }
+    ],
+    "output": "_site",
+    "globalMetadataFiles": [],
+    "globalMetadata": {
+      "_appFaviconPath": "images/favicon.ico",
+      "_appLogoPath": "images/doji.png",
+      "_appLogoUrl": "https://www.doji-tech.com/"
+    },
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "templates/unity"
+    ],
+    "postProcessors": [],
+    "keepFileLink": false,
+    "disableGitFeatures": false
+  }
+}

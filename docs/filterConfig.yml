@@ -1,0 +1,7 @@
+apiRules:
+- include: # The namespaces to generate
+    uidRegex: ^Midas
+    type: Namespace
+- include:
+    uidRegex: ^Global
+    type: Namespace
