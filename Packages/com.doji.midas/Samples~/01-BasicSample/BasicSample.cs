@@ -23,6 +23,10 @@ namespace Midas.Samples {
             OutputImage.texture = _midas.Result;
         }
 
+        private void OnDestroy() {
+            _midas.Dispose();
+        }
+
         public void EstimateDepth() {
             if (SampleImage == null) {
                 Debug.LogError("No input image found.");
