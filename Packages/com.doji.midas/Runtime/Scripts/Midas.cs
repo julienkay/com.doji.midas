@@ -77,7 +77,6 @@ namespace Midas {
             _model = ModelLoader.Load(_modelAsset);
             _worker = WorkerFactory.CreateWorker(Backend, _model);
             _allocator = new TensorCachingAllocator();
-            _ops = WorkerFactory.CreateOps(Backend, _allocator);
 
             int width = _model.inputs[0].shape[2].value;
             int height = _model.inputs[0].shape[3].value;
@@ -99,30 +98,33 @@ namespace Midas {
                 _worker.Execute(tensor);
             }
 
-            using (Tensor predictedDepth = _worker.PeekOutput()) {
-                int height = predictedDepth.shape[1];
-                int width = predictedDepth.shape[2];
+            Tensor predictedDepth = _worker.PeekOutput();
+            int height = predictedDepth.shape[1];
+            int width = predictedDepth.shape[2];
 
-                // normalize
-                if (NormalizeDepth) {
-                    Normalize(predictedDepth, out Tensor normalized);
-                    TextureConverter.RenderToTexture(normalized.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
-                } else {
-                    TextureConverter.RenderToTexture(predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
-                }
+            // normalize
+            if (NormalizeDepth) {
+                Tensor normalized = Normalize(predictedDepth);
+                TextureConverter.RenderToTexture(normalized.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
+                _ops.Dispose();
+            } else {
+                TextureConverter.RenderToTexture(predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
             }
         }
 
         /// <summary>
         /// Normalize on-device using Tensor Ops.
         /// </summary>
-        private void Normalize(Tensor depth, out Tensor normalized) {
+        private Tensor Normalize(Tensor depth) {
+            _ops = WorkerFactory.CreateOps(Backend, _allocator);
             TensorFloat minT = _ops.ReduceMin(depth as TensorFloat, null, false);
             TensorFloat maxT = _ops.ReduceMax(depth as TensorFloat, null, false);
 
             TensorFloat a = _ops.Sub(depth as TensorFloat, minT);
             TensorFloat b = _ops.Sub(maxT, minT);
-            normalized = _ops.Div(a, b);
+            Tensor normalized = _ops.Div(a, b);
+
+            return normalized;
         }
 
         public void Dispose() {

@@ -1,7 +1,6 @@
 using Unity.Sentis;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Windows.WebCam;
 
 namespace Midas.Samples {
 
