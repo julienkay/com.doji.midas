@@ -15,9 +15,19 @@
    "documentationUrl": "https://www.doji-tech.com/midas/",
    "samples": [
     {
+      "displayName": "Shared Sample Assets",
+      "description": "Shared resources for samples. Any other samples depends on this to be imported.",
+      "path": "Samples~/00-SharedSampleAssets"
+    },
+    {
       "displayName": "Basic Sample",
       "description": "Basic example on how to perform depth estimation with an input texture.",
       "path": "Samples~/01-BasicSample"
+    },
+    {
+      "displayName": "Webcam Sample",
+      "description": "Basic example on how to perform depth estimation with a Webcam.",
+      "path": "Samples~/02-WebcamSample"
     }
   ]
 }
