@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.doji.midas": {
-      "version": "file:com.doji.midas",
+      "version": "file:../../../com.doji.midas",
       "depth": 0,
-      "source": "embedded",
+      "source": "local",
       "dependencies": {
         "com.unity.sentis": "1.3.0-pre.2"
       }
