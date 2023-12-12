@@ -16,6 +16,22 @@ namespace Midas {
         public RenderTexture Result { get; set; }
 
         /// <summary>
+        /// Which of the MiDaS models to run.
+        /// </summary>
+        public ModelType ModelType {
+            get => _modelType;
+            set {
+                if (_modelType != value) {
+                    Dispose();
+                    _modelType = value;
+                    InitializeNetwork();
+                }
+            }
+        }
+        private ModelType _modelType;
+
+
+        /// <summary>
         /// Which <see cref="BackendType"/> to run the model with.
         /// </summary>
         public BackendType Backend {
@@ -42,11 +58,6 @@ namespace Midas {
         public bool NormalizeDepth { get; set; } = true;
 
         /// <summary>
-        /// The reference to a ModelAsset.
-        /// </summary>
-        private ModelAsset _modelAsset;
-
-        /// <summary>
         /// The runtime model.
         /// </summary>
         private Model _model;
@@ -54,6 +65,7 @@ namespace Midas {
         private IWorker _worker;
         private ITensorAllocator _allocator;
         private Ops _ops;
+        private string _name;
 
         /// <summary>
         /// the (possibly resized) input texture;
@@ -63,35 +75,58 @@ namespace Midas {
         /// <summary>
         /// Initializes a new instance of MiDaS.
         /// </summary>
-        /// <param name="model">the reference to a MiDaS ONNX model</param>
-        public Midas(ModelAsset model) {
-            _modelAsset = model;
+        public Midas(ModelType modelType = ModelType.midas_v21_small_256) {
+            _modelType = modelType;
             InitializeNetwork();
         }
 
+        internal Midas(ModelAsset modelAsset) {
+            _modelType = ModelType.Unknown;
+            InitializeNetwork(modelAsset);
+        }
+
         private void InitializeNetwork() {
-            if (_modelAsset == null) {
-                throw new ArgumentException("Model was null", "model");
+            if (_modelType == ModelType.Unknown) {
+                throw new InvalidOperationException("Not a valid model type.");
             }
 
-            _model = ModelLoader.Load(_modelAsset);
+#if UNITY_EDITOR
+            MidasEditorUtils.DownloadModel(_modelType);
+#endif
+
+            ModelAsset modelAsset = Resources.Load<ModelAsset>(_modelType.ResourcePath());
+
+            if (modelAsset == null) {
+                throw new Exception($"Could not load model '{ModelType}'.");
+            }
+
+            InitializeNetwork(modelAsset);
+        }
+
+        private void InitializeNetwork(ModelAsset modelAsset) {
+            if (modelAsset == null) {
+                throw new ArgumentException("ModelAsset was null", "modelAsset");
+            }
+
+            _model = ModelLoader.Load(modelAsset);
             _worker = WorkerFactory.CreateWorker(Backend, _model);
             _allocator = new TensorCachingAllocator();
 
             int width = _model.inputs[0].shape[2].value;
             int height = _model.inputs[0].shape[3].value;
+            _name = modelAsset.name;
 
             _resizedInput = new RenderTexture(width, height, 0);
             Result = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat) {
-                name = $"{_modelAsset.name}_output"
+                name = $"depth_{_name}"
             };
+            Resources.UnloadAsset(modelAsset);
         }
 
         public void EstimateDepth(Texture input, bool autoResize = true) {
             // resize
             if (autoResize) {
-                Graphics.Blit(input, _resizedInput);
-                input = _resizedInput;
+                Resize(ref input);
             }
 
             using (var tensor = TextureConverter.ToTensor(input, input.width, input.height, 3)) {
@@ -110,6 +145,14 @@ namespace Midas {
             } else {
                 TextureConverter.RenderToTexture(predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
             }
+
+            Result.name = $"{input.name}_depth_{_name}";
+        }
+
+        private void Resize(ref Texture input) {
+            Graphics.Blit(input, _resizedInput);
+            _resizedInput.name = input.name;
+            input = _resizedInput;
         }
 
         /// <summary>

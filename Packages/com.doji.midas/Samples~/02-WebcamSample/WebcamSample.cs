@@ -1,4 +1,3 @@
-using Unity.Sentis;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +5,7 @@ namespace Midas.Samples {
 
     public class WebcamSample : MonoBehaviour {
 
-        public ModelAsset Model;
+        public ModelType Model;
 
         private Midas _midas;
         public Texture Texture;
@@ -14,7 +13,7 @@ namespace Midas.Samples {
         public RawImage OutputImage;
 
         public void Start() {
-            _midas = new Midas(Model);
+            _midas = new Midas();
             OutputImage.texture = _midas.Result;
 
             WebCamDevice[] devices = WebCamTexture.devices;

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Unity.Sentis;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +7,7 @@ namespace Midas.Samples {
 
     public class BasicSample : MonoBehaviour {
 
-        public ModelAsset Model;
+        public ModelType Model;
 
         public Texture2D SampleImage;
         private Midas _midas;
@@ -67,6 +66,11 @@ namespace Midas.Samples {
         private void OnValidate() {
             if (InputImage != null) {
                 InputImage.texture = SampleImage;
+                if (SampleImage != null) {
+                    float ratio = ((float)SampleImage.width) / SampleImage.height;
+                    InputImage.GetComponent<AspectRatioFitter>().aspectRatio = ratio;
+                    OutputImage.GetComponent<AspectRatioFitter>().aspectRatio = ratio;
+                }
             }
         }
 #endif
