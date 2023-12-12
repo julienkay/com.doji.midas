@@ -71,7 +71,7 @@ namespace Midas {
         dpt_large_384,
     }
 
-    public static class ModelExtensions {
+    internal static class ModelExtensions {
 
         private const string BASE_URL = "https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/";
 

@@ -1,11 +1,10 @@
 using System.IO;
 using System;
 using UnityEngine.Networking;
-using Unity.Sentis;
 
 namespace Midas {
 
-    public static class MidasEditorUtils {
+    internal static class MidasEditorUtils {
 
         public static void DownloadModel(ModelType model) {
             if (model == ModelType.Unknown) {
