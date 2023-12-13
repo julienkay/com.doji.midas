@@ -1,5 +1,6 @@
 - name: Midas
   href: ../index.md
-  items:
-  - name: Getting Started
-    href: getting-started.md
+- name: Getting Started
+  href: getting-started.md
+- name: Scripting Reference
+  href: ../api/

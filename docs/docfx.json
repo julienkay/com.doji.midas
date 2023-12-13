@@ -6,7 +6,7 @@
           "files": [
             "doji.midas.csproj"
           ],
-          "src": "../"
+          "src": "../projects/Midas"
         }
       ],
       "dest": "api",
