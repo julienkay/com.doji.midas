@@ -28,7 +28,7 @@ namespace Midas.Samples {
         }
 
         private void OnDestroy() {
-            _midas.Dispose();
+            _midas?.Dispose();
         }
 
         private void Update() {

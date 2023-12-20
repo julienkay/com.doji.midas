@@ -23,7 +23,7 @@ namespace Midas.Samples {
         }
 
         private void OnDestroy() {
-            _midas.Dispose();
+            _midas?.Dispose();
         }
 
         public void EstimateDepth() {

@@ -72,6 +72,9 @@ namespace Midas {
         /// </summary>
         private RenderTexture _resizedInput;
 
+#if UNITY_EDITOR
+        public static event Action<ModelType> OnModelRequested = (x) => {};
+#endif
         /// <summary>
         /// Initializes a new instance of MiDaS.
         /// </summary>
@@ -91,13 +94,13 @@ namespace Midas {
             }
 
 #if UNITY_EDITOR
-            MidasEditorUtils.DownloadModel(_modelType);
+            OnModelRequested?.Invoke(_modelType);
 #endif
 
             ModelAsset modelAsset = Resources.Load<ModelAsset>(_modelType.ResourcePath());
 
             if (modelAsset == null) {
-                throw new Exception($"Could not load model '{ModelType}'.");
+                throw new Exception($"Could not load model '{ModelType}'. Make sure the model exists in your project.");
             }
 
             InitializeNetwork(modelAsset);
