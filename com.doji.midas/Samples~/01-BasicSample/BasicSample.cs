@@ -19,7 +19,6 @@ namespace Midas.Samples {
 
         public void Start () {
             _midas = new Midas(Model);
-            OutputImage.texture = _midas.Result;
         }
 
         private void OnDestroy() {
@@ -31,12 +30,13 @@ namespace Midas.Samples {
                 Debug.LogError("No input image found.");
                 return;
             }
-            _midas.EstimateDepth(SampleImage);
+            var result = _midas.EstimateDepth(SampleImage);
+            OutputImage.texture = result;
             ExportButton.SetActive(true);
         }
 
         public void ExportDepth() {
-            RenderTexture result = _midas.Result;
+            RenderTexture result = OutputImage.texture as RenderTexture;
             if (result == null) {
                 Debug.LogError("No depth estimation computed yet.");
                 return;
@@ -70,6 +70,13 @@ namespace Midas.Samples {
                     float ratio = ((float)SampleImage.width) / SampleImage.height;
                     InputImage.GetComponent<AspectRatioFitter>().aspectRatio = ratio;
                     OutputImage.GetComponent<AspectRatioFitter>().aspectRatio = ratio;
+                }
+            }
+            if (_midas != null) {
+                if (_midas.ModelType != Model) {
+                    _midas.ModelType = Model;
+                    OutputImage.texture = null;
+                    ExportButton.SetActive(false);
                 }
             }
         }

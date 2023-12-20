@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Midas.Editor {
@@ -42,14 +41,12 @@ namespace Midas.Editor {
             var asyncOp = wr.SendWebRequest();
 
             int dlID = Progress.Start($"Downloading {model}");
-            Debug.Log(dlID);
             Progress.RegisterCancelCallback(dlID, () => { return true; });
             _downloads.Add(model);
             bool canceled = false;
 
             while (!asyncOp.isDone) {
                 if (Progress.GetStatus(dlID) == Progress.Status.Canceled) {
-                    Debug.Log("avorted");
                     wr.Abort();
                     canceled = true;
                 }
