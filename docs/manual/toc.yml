@@ -2,3 +2,5 @@
   href: ../index.md
 - name: Getting Started
   href: getting-started.md
+- name: Models
+  href: models.md
