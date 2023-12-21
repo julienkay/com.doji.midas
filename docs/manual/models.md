@@ -1,38 +1,33 @@
 # MiDaS Models
 
-There are variety of different MiDaS models available. To be able to use them with Unity Sentis, the official models were converted to ONNX using [this colab notebook][colab]. You'll find links to the pretraine models in ONNX format below.
+There are variety of different MiDaS models available. To be able to use them with Unity Sentis, the official models were converted to ONNX using [this colab notebook][colab]. You'll find links to the pretrained models in ONNX format below.
 
 
 ## Overview
 
-| Model Type                    | Size     | Version   |
-|-------------------------------|----------|-----------|
-| [midas_v21_small_256][1]      | 63 MB    | 2.1       |
-| [midas_v21_384][2]            | 397 MB   | 2.1       |
-| [dpt_beit_large_512][3]       | 1.34 GB  | 3.1       |
-| [dpt_beit_large_384][4]       | 1.34 GB  | 3.1       |
-| [dpt_beit_base_384][5]        | 450 MB   | 3.1       |
-| [dpt_swin2_large_384][6]      | 832 MB   | 3.1       |
-| [dpt_swin2_base_384][7]       | 410 MB   | 3.1       |
-| [dpt_swin2_tiny_256][8]       | 157 MB   | 3.1       |
-| [dpt_swin_large_384][9]       | 854 MB   | 3.1       |
-| [dpt_next_vit_large_384][10]  | 267 MB   | 3.1       |
-| [dpt_levit_224][11]           | 136 MB   | 3.0       |
-| [dpt_large_384][12]           | 1.27 GB  | 3.0       |
+| Model Type                    | Size     | MiDaS Version   |
+|-------------------------------|----------|-----------------|
+| [midas_v21_small_256][1]      | 63 MB    | 2.1             |
+| [midas_v21_384][2]            | 397 MB   | 2.1             |
+| [dpt_beit_large_512][3]       | 1.34 GB  | 3.1             |
+| [dpt_beit_large_384][4]       | 1.34 GB  | 3.1             |
+| [dpt_beit_base_384][5]        | 450 MB   | 3.1             |
+| [dpt_swin2_large_384][6]      | 832 MB   | 3.1             |
+| [dpt_swin2_base_384][7]       | 410 MB   | 3.1             |
+| [dpt_swin2_tiny_256][8]       | 157 MB   | 3.1             |
+| [dpt_swin_large_384][9]       | 854 MB   | 3.1             |
+| [dpt_next_vit_large_384][10]  | 267 MB   | 3.1             |
+| [dpt_levit_224][11]           | 136 MB   | 3.0             |
+| [dpt_large_384][12]           | 1.27 GB  | 3.0             |
 
 
 ## Usage
 
-To keep the package size reasonable, only the midas_v21_small_256 model is included with the package when downloading from the Asset Store. To use other models they have to be downloaded to your development system first.
+To keep the package size reasonable, only the @Midas.ModelType.midas_v21_small_256 model is included with the package when downloading from the Asset Store. To use other models you have to downloaded them first.
 
-When you create an instance of the [`Midas`](~/api/Midas.Midas.yml) class you can pass the [`ModelType`](~/api/Midas.ModelType.yml) in the constructor to choose which model to use. In the Unity Editor if you're about to use a model that is not yet present, it will automatically be downloading if you wish to do so.
+When you create an instance of the [`Midas`](~/api/Midas.Midas.yml) class you can pass the [`ModelType`](~/api/Midas.ModelType.yml) in the constructor to choose which model to use. In the Unity Editor if you're about to use a model that is not yet present, it can automatically be downloading if you wish to do so.
 
 Otherwise you can always manually download the ONNX models from the links above and place them inside the Resources/ONNX folder.
-
-    Choose the appropriate model type based on your requirements, considering factors such as model size, architecture, and performance.
-    Utilize the provided methods in the ModelExtensions class to obtain download links, file names, and resource paths for the selected model.
-
-For more information on each model type, refer to the script comments in the ModelType enum and the ModelExtensions class.
 
 
 ## Which Model To Use
