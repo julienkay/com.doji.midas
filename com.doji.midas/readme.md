@@ -4,7 +4,7 @@ This is a Unity package that allows users to do Monocular Depth Estimation with 
 
 ## Usage
 
-Please refer to the [documentation] for usage guides.
+For usage guides please refer to the [documentation].
 
-[documentation]: https://www.doji-tech.com/midas/
-[MiDaS]: https://www.doji-tech.com/midas/
+[documentation]: https://docs.doji-tech.com/com.doji.midas/
+[MiDaS]: https://github.com/isl-org/MiDaS/

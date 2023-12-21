@@ -1,0 +1,6 @@
+order: 200
+items:
+- name: Manual
+  href: ../manual/toc.yml
+- name: Scripting API
+  href: ../api/toc.yml

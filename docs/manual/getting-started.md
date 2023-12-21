@@ -39,7 +39,7 @@ A simple example on how to use the library can also be found in the 'Basic Sampl
 
 ## Choosing a Model Type
 
-Use the ModelType property to set the desired Midas model. Default is midas_v21_small_256.
+Use the ModelType property to set the desired Midas model. Default is @Midas.ModelType.midas_v21_small_256.
 
 ```CSharp
 var midas = new Midas(ModelType.dpt_beit_large_384);
