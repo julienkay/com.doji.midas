@@ -5,3 +5,7 @@ apiRules:
 - include:
     uidRegex: ^Global
     type: Namespace
+- exclude:
+    uidRegex: ^Midas\.Editor
+- exclude:
+    uidRegex: ^Midas\.Samples

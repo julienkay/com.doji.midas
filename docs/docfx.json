@@ -4,9 +4,9 @@
       "src": [
         {
           "files": [
-            "doji.midas.csproj"
+            "**/*.cs"
           ],
-          "src": "../projects/Midas"
+          "src": "../com.doji.midas"
         }
       ],
       "dest": "api",
@@ -17,7 +17,7 @@
       "namespaceLayout": "flattened",
       "memberLayout": "samePage",
       "EnumSortOrder": "declaringOrder",
-      "allowCompilationErrors": false,
+      "allowCompilationErrors": true,
       "globalNamespaceId": "Global",
       "filter": "filterConfig.yml"
     }

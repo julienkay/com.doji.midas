@@ -11,7 +11,7 @@ To start, create a new 'Midas' instance:
 var midas = new Midas();
 ```
 
-Then you can pass in a Texture2D to @Midas.Midas.EstimateDepth(UnityEngine.Texture,System.Boolean)
+Then you can pass in a Texture2D to @Midas.Midas.EstimateDepth(Texture,System.Boolean)
 
 ```CSharp
 // Estimate depth from an input texture
