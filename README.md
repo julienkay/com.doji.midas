@@ -12,7 +12,7 @@
     <a href="https://assetstore.unity.com/packages/slug/268501"><strong>Asset Store</strong></a>
     <br />
     <br />
-    <a href="https://www.doji-tech.com/midas/">Documentation</a>
+    <a href="https://docs.doji-tech.com/com.doji.midas/">Documentation</a>
     ·
     <a href="https://forum.unity.com/">Forum</a>
     ·
@@ -27,4 +27,4 @@ This project is dual-licensed. You can either get it here on GitHub under the MI
 Please refer to the [documentation] for usage guides.
 
 [Unity Asset Store]: https://assetstore.unity.com/packages/slug/268501
-[documentation]: https://www.doji-tech.com/midas/
+[documentation]: https://docs.doji-tech.com/com.doji.midas/
