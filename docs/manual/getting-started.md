@@ -26,7 +26,7 @@ Finally, when you're done you should call 'Dispose()' to properly free up native
 midas.Dispose();
 ```
 
-You can reuse the same 'Midas' isntance for multiple inferences. But if you only need it once, you might want to use the 'using' statement, which automatically Dispose() for you:
+You can reuse the same 'Midas' instance for multiple inferences. But if you only need it once, you might want to use the 'using' statement, so you don't need to worry about disposing it:
 
 ```CSharp
 using (Midas midas = new Midas()) {
@@ -39,7 +39,7 @@ A simple example on how to use the library can also be found in the 'Basic Sampl
 
 ## Choosing a Model Type
 
-Use the ModelType property to set the desired Midas model. Default is @Midas.ModelType.midas_v21_small_256.
+Use the ModelType property to choose the desired Midas model. The default is @Midas.ModelType.midas_v21_small_256.
 
 ```CSharp
 var midas = new Midas(ModelType.dpt_beit_large_384);
