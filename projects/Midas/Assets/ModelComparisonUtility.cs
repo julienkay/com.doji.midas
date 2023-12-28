@@ -1,9 +1,8 @@
-using Depth;
+using Doji.AI.Depth;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.Sentis;
 using UnityEditor;
 using UnityEngine;
 

@@ -11,7 +11,7 @@ To start, create a new 'Midas' instance:
 var midas = new Midas();
 ```
 
-Then you can pass in a Texture2D to @Midas.Midas.EstimateDepth(Texture,System.Boolean)
+Then you can pass in a Texture2D to @Doji.AI.Depth.Midas.EstimateDepth(Texture,System.Boolean)
 
 ```CSharp
 // Estimate depth from an input texture
@@ -39,13 +39,13 @@ A simple example on how to use the library can also be found in the 'Basic Sampl
 
 ## Choosing a Model Type
 
-Use the ModelType property to choose the desired Midas model. The default is @Midas.ModelType.midas_v21_small_256.
+The default model is @Doji.AI.Depth.ModelType.midas_v21_small_256. You can specify the model to be used in the Midas constructor.
 
 ```CSharp
 var midas = new Midas(ModelType.dpt_beit_large_384);
 ```
 
-Changing the model type on an existing 'Midas' instance automatically disposes of the existing model and initializes the new one.
+You can also change the model on an existing 'Midas' instance through the @Doji.AI.Depth.ModelType property. Changing the model automatically disposes of the existing model and initializes the new one.
 
 ```CSharp
 midas.ModelType = ModelType.midas_v21_small_256;

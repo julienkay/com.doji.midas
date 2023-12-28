@@ -2,7 +2,7 @@ using System;
 using Unity.Sentis;
 using UnityEngine;
 
-namespace Midas {
+namespace Doji.AI.Depth {
 
     /// <summary>
     /// A class that allows to run Midas models
@@ -24,7 +24,6 @@ namespace Midas {
             }
         }
         private ModelType _modelType;
-
 
         /// <summary>
         /// Which <see cref="BackendType"/> to run the model with.
@@ -79,6 +78,7 @@ namespace Midas {
 #if UNITY_EDITOR
         public static event Action<ModelType> OnModelRequested = (x) => {};
 #endif
+
         /// <summary>
         /// Initializes a new instance of MiDaS.
         /// </summary>
@@ -112,10 +112,11 @@ namespace Midas {
 
         private void InitializeNetwork(ModelAsset modelAsset) {
             if (modelAsset == null) {
-                throw new ArgumentException("ModelAsset was null", "modelAsset");
+                throw new ArgumentException("ModelAsset was null", nameof(modelAsset));
             }
 
             _model = ModelLoader.Load(modelAsset);
+            Resources.UnloadAsset(modelAsset);
             _worker = WorkerFactory.CreateWorker(Backend, _model);
             _allocator = new TensorCachingAllocator();
 
@@ -130,7 +131,6 @@ namespace Midas {
             _result = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat) {
                 name = $"depth_{_name}"
             };
-            Resources.UnloadAsset(modelAsset);
         }
 
         public RenderTexture EstimateDepth(Texture input, bool autoResize = true) {
@@ -185,9 +185,13 @@ namespace Midas {
             _worker?.Dispose();
             _allocator?.Dispose();
             _ops?.Dispose();
-            if (_resizedInput!= null) {
+            if (_resizedInput != null) {
                 _resizedInput.Release();
+#if UNITY_EDITOR
+                UnityEngine.Object.DestroyImmediate(_resizedInput);
+#else
                 UnityEngine.Object.Destroy(_resizedInput);
+#endif
             }
         }
     }

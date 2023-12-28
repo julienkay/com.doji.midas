@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine.Networking;
 
-namespace Midas.Editor {
+namespace Doji.AI.Depth.Editor {
 
     public static class MidasEditorUtils {
 

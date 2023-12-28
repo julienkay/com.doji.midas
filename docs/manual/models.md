@@ -23,9 +23,9 @@ There are variety of different MiDaS models available. To be able to use them wi
 
 ## Usage
 
-To keep the package size reasonable, only the @Midas.ModelType.midas_v21_small_256 model is included with the package when downloading from the Asset Store. To use other models you have to downloaded them first.
+To keep the package size reasonable, only the @Doji.AI.Depth.ModelType.midas_v21_small_256 model is included with the package when downloading from the Asset Store. To use other models you have to downloaded them first.
 
-When you create an instance of the [`Midas`](~/api/Midas.Midas.yml) class you can pass the [`ModelType`](~/api/Midas.ModelType.yml) in the constructor to choose which model to use. In the Unity Editor if you're about to use a model that is not yet present, you will automatically be prompted to allow the file download.
+When you create an instance of the @Doji.AI.Depth.Midas class you can pass the @Doji.AI.Depth.ModelType in the constructor to choose which model to use. In the Unity Editor if you're about to use a model that is not yet present, you will automatically be prompted to allow the file download.
 
 Otherwise you can always manually download the ONNX models from the links above and place them inside the Resources/ONNX folder.
 

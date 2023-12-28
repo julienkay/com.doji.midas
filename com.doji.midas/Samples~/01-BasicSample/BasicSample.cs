@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Midas.Samples {
+namespace Doji.AI.Depth.Samples {
 
     public class BasicSample : MonoBehaviour {
 

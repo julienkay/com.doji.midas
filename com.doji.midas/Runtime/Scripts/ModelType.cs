@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Midas {
+namespace Doji.AI.Depth {
 
     /// <summary>
     /// All the supported MiDaS models.
