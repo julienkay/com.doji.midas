@@ -43,7 +43,8 @@ namespace MidasSample {
                 }
 
                 using (Midas midas = new Midas(modelType)) {
-                    RenderTexture depth = midas.EstimateDepth(inputTexture);
+                    RenderTexture depth = midas.Result;
+                    midas.EstimateDepth(inputTexture);
 
                     // resize to inputTexture dimensions
                     int width = inputTexture.width;

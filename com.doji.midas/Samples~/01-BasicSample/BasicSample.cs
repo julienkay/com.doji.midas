@@ -30,8 +30,8 @@ namespace Doji.AI.Depth.Samples {
                 Debug.LogError("No input image found.");
                 return;
             }
-            var result = _midas.EstimateDepth(SampleImage);
-            OutputImage.texture = result;
+            _midas.EstimateDepth(SampleImage);
+            OutputImage.texture = _midas.Result;
             ExportButton.SetActive(true);
         }
 

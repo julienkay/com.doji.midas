@@ -52,9 +52,9 @@ namespace Doji.AI.Depth {
         public bool NormalizeDepth { get; set; } = true;
 
         /// <summary>
-        /// A RenderTexture containing the estimated depth.
+        /// A RenderTexture that contains the estimated depth.
         /// </summary>
-        private RenderTexture _result { get; set; }
+        public RenderTexture Result { get; set; }
 
         /// <summary>
         /// The runtime model.
@@ -124,16 +124,34 @@ namespace Doji.AI.Depth {
             int height = _model.inputs[0].shape[3].value;
             _name = modelAsset.name;
 
-            _resizedInput = new RenderTexture(width, height, 0) {
-                autoGenerateMips = false,
-            };
 
-            _result = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat) {
-                name = $"depth_{_name}"
-            };
+            InitInputTexture(width, height);
+            InitOutputTexture(width, height);
         }
 
-        public RenderTexture EstimateDepth(Texture input, bool autoResize = true) {
+        private void InitInputTexture(int width, int height) {
+            if (_resizedInput.width != width || _resizedInput.height != height) {
+                _resizedInput = new RenderTexture(width, height, 0) {
+                    autoGenerateMips = false,
+                };
+            }
+        }
+        
+        private void InitOutputTexture(int width, int height) {
+            if (Result != null) {
+                if (Result.width != width || Result.height != height) {
+                    Result.Release();
+                    Result.width = width;
+                    Result.height = height;
+                    Result.Create();
+                }
+            } else {
+                Result = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat);
+            }
+            Result.name = $"depth_{_name}";
+        }
+
+        public void EstimateDepth(Texture input, bool autoResize = true) {
             // resize
             if (autoResize) {
                 Resize(ref input);
@@ -150,14 +168,13 @@ namespace Doji.AI.Depth {
             // normalize
             if (NormalizeDepth) {
                 Tensor normalized = Normalize(predictedDepth);
-                TextureConverter.RenderToTexture(normalized.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, _result);
+                TextureConverter.RenderToTexture(normalized.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
                 _ops.Dispose();
             } else {
-                TextureConverter.RenderToTexture(predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, _result);
+                TextureConverter.RenderToTexture(predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
             }
 
-            _result.name = $"{input.name}_depth_{_name}";
-            return _result;
+            Result.name = $"{input.name}_depth_{_name}";
         }
 
         private void Resize(ref Texture input) {

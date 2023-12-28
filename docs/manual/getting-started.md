@@ -15,7 +15,8 @@ Then you can pass in a Texture2D to @Doji.AI.Depth.Midas.EstimateDepth(Texture,S
 
 ```CSharp
 // Estimate depth from an input texture
-var predictedDepth = midas.EstimateDepth(inputImage);
+midas.EstimateDepth(inputImage);
+RenderTexture predictedDepth = midas.Result;
 
 // ... use predictedDepth as needed
 ```
@@ -48,8 +49,12 @@ var midas = new Midas(ModelType.dpt_beit_large_384);
 You can also change the model on an existing 'Midas' instance through the @Doji.AI.Depth.ModelType property. Changing the model automatically disposes of the existing model and initializes the new one.
 
 ```CSharp
-midas.ModelType = ModelType.midas_v21_small_256;
+midas.ModelType = ModelType.dpt_beit_large_384;
 ```
+
+Note, that different models can have different output sizes, so changing the model might change the dimensions of the predicted depth map.
+
+For more information on available models and when to use which, see the [Models](~/manual/models.md) page.
 
 
 ## Choosing a Backend
