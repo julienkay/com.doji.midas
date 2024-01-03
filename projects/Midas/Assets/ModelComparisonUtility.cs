@@ -57,7 +57,7 @@ namespace MidasSample {
             RenderTexture combinedTexture = GraphicsUtility.Merge(resizedDepthMaps, 4);
 
             // Save the combined texture to a file or use it as needed
-            SaveTextureToFile(combinedTexture, "CombinedDepthMaps.png");
+            SaveTextureToFile(combinedTexture, $"{inputTexture.name}_depth.png");
 
             Dispose(combinedTexture);
             foreach(RenderTexture t in resizedDepthMaps.Cast<RenderTexture>()) {

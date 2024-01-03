@@ -116,21 +116,20 @@ namespace Doji.AI.Depth {
             }
 
             _model = ModelLoader.Load(modelAsset);
+            _name = modelAsset.name;
             Resources.UnloadAsset(modelAsset);
             _worker = WorkerFactory.CreateWorker(Backend, _model);
             _allocator = new TensorCachingAllocator();
 
             int width = _model.inputs[0].shape[2].value;
             int height = _model.inputs[0].shape[3].value;
-            _name = modelAsset.name;
-
 
             InitInputTexture(width, height);
             InitOutputTexture(width, height);
         }
 
         private void InitInputTexture(int width, int height) {
-            if (_resizedInput.width != width || _resizedInput.height != height) {
+            if (_resizedInput == null || _resizedInput.width != width || _resizedInput.height != height) {
                 _resizedInput = new RenderTexture(width, height, 0) {
                     autoGenerateMips = false,
                 };
