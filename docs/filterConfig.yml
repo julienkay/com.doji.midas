@@ -1,11 +1,11 @@
 apiRules:
 - include: # The namespaces to generate
-    uidRegex: ^Midas
+    uidRegex: ^Doji\.AI\.Depth
     type: Namespace
 - include:
     uidRegex: ^Global
     type: Namespace
 - exclude:
-    uidRegex: ^Midas\.Editor
+    uidRegex: ^Doji\.AI\.Depth\.Editor
 - exclude:
-    uidRegex: ^Midas\.Samples
+    uidRegex: ^Doji\.AI\.Depth\.Samples
