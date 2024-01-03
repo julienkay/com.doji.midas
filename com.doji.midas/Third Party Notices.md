@@ -1,7 +1,9 @@
-This package contains third-party software components governed by the license(s) indicated below:
+The ./Runtime/Resources/ folder of this package contains third-party neural network models governed by the license(s) indicated below:
+
 ---------
 
-Component Name: MiDaS
+Source: https://github.com/isl-org/MiDaS
+Component Name: MiDaS models
 
 License Type: MIT License
 
