@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.doji.chromatic": {
+      "version": "file:../../../../com.doji.chromatic/com.doji.chromatic",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.doji.midas": {
       "version": "file:../../../com.doji.midas",
       "depth": 0,

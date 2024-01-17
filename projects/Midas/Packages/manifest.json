@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.doji.midas": "file:../../../com.doji.midas",
+    "com.doji.chromatic": "file:../../../../com.doji.chromatic/com.doji.chromatic",
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.ugui": "1.0.0",

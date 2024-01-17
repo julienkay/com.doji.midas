@@ -1,3 +1,4 @@
+using Chromatic;
 using Doji.AI.Depth;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,13 @@ namespace MidasSample {
 
         private static void CreateDepthMapTexture(Texture inputTexture) {
             if (inputTexture == null) {
-                Debug.LogError("Input texture is not assigned. Please assign it in the Unity Editor.");
+                Debug.LogError("Input input is not assigned. Please assign it in the Unity Editor.");
                 return;
             }
 
-            // Calculate the dimensions of the combined texture based on inputTexture
-            int combinedWidth = 4 * inputTexture.width;
-            int combinedHeight = 3 * inputTexture.height;
-
-
             ModelType[] allModels = (ModelType[])Enum.GetValues(typeof(ModelType));
-            List<Texture> resizedDepthMaps = new List<Texture>();
+            List<Texture> tmpTextures = new List<Texture>();
+            List<Texture> outputTextures = new List<Texture>();
 
             // Iterate over all Midas models
             foreach (ModelType modelType in allModels) {
@@ -38,7 +35,7 @@ namespace MidasSample {
                 }
 
                 if (!File.Exists(Path.Combine("Packages", "com.doji.midas", "Runtime", "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx"))) {
-                    resizedDepthMaps.Add(null);
+                    outputTextures.Add(null);
                     continue;
                 }
 
@@ -49,18 +46,23 @@ namespace MidasSample {
                     // resize to inputTexture dimensions
                     int width = inputTexture.width;
                     int height = inputTexture.height;
-                    RenderTexture depthMap = GetResized(depth, width, height);
-                    resizedDepthMaps.Add(depthMap);
+                    RenderTexture resizedDepth = GetResized(depth, width, height);
+                    tmpTextures.Add(resizedDepth);
+
+                    // apply color scheme
+                    RenderTexture coloredDepth = GetColorized(resizedDepth, ColorMaps.magma);
+                    tmpTextures.Add(coloredDepth);
+                    outputTextures.Add(coloredDepth);
                 }
             }
 
-            RenderTexture combinedTexture = GraphicsUtility.Merge(resizedDepthMaps, 4);
+            RenderTexture combinedTexture = GraphicsUtility.Merge(outputTextures, 4);
 
-            // Save the combined texture to a file or use it as needed
+            // Save the combined input to a file or use it as needed
             SaveTextureToFile(combinedTexture, $"{inputTexture.name}_depth.png");
 
             Dispose(combinedTexture);
-            foreach(RenderTexture t in resizedDepthMaps.Cast<RenderTexture>()) {
+            foreach(RenderTexture t in tmpTextures.Cast<RenderTexture>()) {
                 RenderTexture.ReleaseTemporary(t);
             }
         }
@@ -76,13 +78,12 @@ namespace MidasSample {
 
         private static void SaveTextureToFile(RenderTexture texture, string fileName) {
             RenderTexture.active = texture;
-
-            Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RFloat, false);
+            Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false, true);
             texture2D.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
             texture2D.Apply();
 
             byte[] bytes = texture2D.EncodeToPNG();
-            System.IO.File.WriteAllBytes(fileName, bytes);
+            File.WriteAllBytes(fileName, bytes);
 
             RenderTexture.active = null;
         }
@@ -91,8 +92,17 @@ namespace MidasSample {
         /// Gets a resized temporary RenderTexture of the original image
         /// </summary>
         private static RenderTexture GetResized(RenderTexture texture, int width, int height) {
-            RenderTexture tmp = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.RFloat, RenderTextureReadWrite.Default);
+            RenderTexture tmp = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
             Graphics.Blit(texture, tmp);
+            return tmp;
+        }
+        
+        /// <summary>
+        /// Gets a colorized temporary RenderTexture.
+        /// </summary>
+        private static RenderTexture GetColorized(RenderTexture input, Texture2D colorMap) {
+            RenderTexture tmp = RenderTexture.GetTemporary(input.width, input.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+            GraphicsUtility.MapTexture(input, tmp, colorMap);
             return tmp;
         }
     }

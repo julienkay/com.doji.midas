@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 namespace MidasSample {
 
@@ -9,7 +10,7 @@ namespace MidasSample {
 
         /// <summary>
         /// Puts all <paramref name="textures"/> into a larger texture.
-        /// Assumes all the textures have same dimensions.
+        /// Assumes all the textures have same dimensions and format.
         /// null textures are allowed and will be skipped and result in an empty block
         /// in the combined texture.
         /// </summary>
@@ -26,25 +27,29 @@ namespace MidasSample {
                 throw new InvalidOperationException("No non-null texture found.");
             }
 
-            return MergeInternal(textures, reference.width, reference.height, numTexturesPerRow);
+            return MergeInternal(textures, numTexturesPerRow);
         }
 
         /// <summary>
         /// Merges all <paramref name="textures"/> into a larger texture.
         /// TODO: rescale to largest needed dimension if textures have different dimensions
         /// </summary>
-        private static RenderTexture MergeInternal(IList<Texture> textures, int width, int height, int numTexturesPerRow) {
-            int row = 0;
-            int col = 0;
+        private static RenderTexture MergeInternal(IList<Texture> textures, int numTexturesPerRow) {
+            Texture reference = textures.FirstOrDefault(element => element != null);
+            int width = reference.width;
+            int height = reference.height;
+            GraphicsFormat format = reference.graphicsFormat;
 
             // Calculate the dimensions of the combined texture based on input textures
-            int combinedWidth = 4 * width;
-            int combinedHeight = 3 * height;
+            int numRows = (int)Math.Ceiling((float)textures.Count / numTexturesPerRow);
+            int numCols = numTexturesPerRow;
+            int combinedWidth = numCols * width;
+            int combinedHeight = numRows * height;
 
             // Create a texture to store all depth maps
-            RenderTexture combinedTexture = new RenderTexture(combinedWidth, combinedHeight, 0, RenderTextureFormat.RFloat);
+            RenderTexture combinedTexture = new RenderTexture(combinedWidth, combinedHeight, 0, format);
 
-            for (int i = 0; i < textures.Count; i++) {
+            for (int i = 0, row = 0, col = 0; i < textures.Count; i++) {
                 if (textures[i] == null) {
                     continue;
                 }
@@ -93,6 +98,27 @@ namespace MidasSample {
             texture.Apply();
             RenderTexture.ReleaseTemporary(tmp);
             RenderTexture.active = null;
+        }
+
+        /// <summary>
+        /// Applies a color mapping to a source RenderTexture based on a gradient texture and writes the result to a destination RenderTexture.
+        /// </summary>
+        /// <param name="sourceTexture">The source RenderTexture to be mapped.</param>
+        /// <param name="destinationTexture">The destination RenderTexture where the mapped result will be written.</param>
+        /// <param name="gradientTexture">The gradient texture used for color mapping.</param>
+        public static void MapTexture(Texture sourceTexture, RenderTexture destinationTexture, Texture gradientTexture) {
+            Material material = new Material(Shader.Find("Doji/Chromatic/ColorRamp"));
+            material.SetTexture("_MainTex", sourceTexture);
+            material.SetTexture("_ColorRamp", gradientTexture);
+
+            Graphics.Blit(sourceTexture, destinationTexture, material);
+
+            // Clean up the temporary material
+#if UNITY_EDITOR
+            UnityEngine.Object.DestroyImmediate(material);
+#else
+            UnityEngine.Object.Destroy(material);
+#endif
         }
     }
 }
