@@ -14,11 +14,11 @@ namespace MidasSample {
         /// null textures are allowed and will be skipped and result in an empty block
         /// in the combined texture.
         /// </summary>
-        public static RenderTexture Merge(IList<Texture> textures, int numTexturesPerRow) {
+        public static RenderTexture Merge(IEnumerable<Texture> textures, int numTexturesPerRow) {
             if (textures == null) {
                 throw new ArgumentNullException(nameof(textures));
             }
-            if (textures.Count == 0) {
+            if (textures.Count() == 0) {
                 return null;
             }
 
@@ -34,14 +34,14 @@ namespace MidasSample {
         /// Merges all <paramref name="textures"/> into a larger texture.
         /// TODO: rescale to largest needed dimension if textures have different dimensions
         /// </summary>
-        private static RenderTexture MergeInternal(IList<Texture> textures, int numTexturesPerRow) {
+        private static RenderTexture MergeInternal(IEnumerable<Texture> textures, int numTexturesPerRow) {
             Texture reference = textures.FirstOrDefault(element => element != null);
             int width = reference.width;
             int height = reference.height;
             GraphicsFormat format = reference.graphicsFormat;
 
             // Calculate the dimensions of the combined texture based on input textures
-            int numRows = (int)Math.Ceiling((float)textures.Count / numTexturesPerRow);
+            int numRows = (int)Math.Ceiling((float)textures.Count() / numTexturesPerRow);
             int numCols = numTexturesPerRow;
             int combinedWidth = numCols * width;
             int combinedHeight = numRows * height;
@@ -49,8 +49,9 @@ namespace MidasSample {
             // Create a texture to store all depth maps
             RenderTexture combinedTexture = new RenderTexture(combinedWidth, combinedHeight, 0, format);
 
-            for (int i = 0, row = 0, col = 0; i < textures.Count; i++) {
-                if (textures[i] == null) {
+            int row = 0, col = 0;
+            foreach (Texture texture in textures) {
+                if (textures == null) {
                     continue;
                 }
 
@@ -58,7 +59,7 @@ namespace MidasSample {
                 int targetY = combinedHeight - (row * height) - height; // because textures origin = bottom left
                 
                 // Copy the texture to the combined texture
-                Graphics.CopyTexture(textures[i], 0, 0, 0, 0, width, height, combinedTexture, 0, 0, targetX, targetY);
+                Graphics.CopyTexture(texture, 0, 0, 0, 0, width, height, combinedTexture, 0, 0, targetX, targetY);
 
                 // Move to the next column
                 col++;

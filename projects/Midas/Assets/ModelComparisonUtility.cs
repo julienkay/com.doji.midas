@@ -25,13 +25,20 @@ namespace MidasSample {
             }
 
             ModelType[] allModels = (ModelType[])Enum.GetValues(typeof(ModelType));
-            List<Texture> tmpTextures = new List<Texture>();
-            List<Texture> outputTextures = new List<Texture>();
+            List<RenderTexture> tmpTextures = new List<RenderTexture>();
+            // add source texture
+            List<RenderTexture> outputTextures = new List<RenderTexture> {
+                GetTmpCopy(inputTexture)
+            };
 
             // Iterate over all Midas models
             foreach (ModelType modelType in allModels) {
                 if (modelType == ModelType.Unknown) {
                     continue;
+                }
+
+                if (modelType == ModelType.dpt_next_vit_large_384) {
+                    continue; // skip because this one seems broken?
                 }
 
                 if (!File.Exists(Path.Combine("Packages", "com.doji.midas", "Runtime", "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx"))) {
@@ -51,7 +58,6 @@ namespace MidasSample {
 
                     // apply color scheme
                     RenderTexture coloredDepth = GetColorized(resizedDepth, ColorMaps.magma);
-                    tmpTextures.Add(coloredDepth);
                     outputTextures.Add(coloredDepth);
                 }
             }
@@ -62,7 +68,10 @@ namespace MidasSample {
             SaveTextureToFile(combinedTexture, $"{inputTexture.name}_depth.png");
 
             Dispose(combinedTexture);
-            foreach(RenderTexture t in tmpTextures.Cast<RenderTexture>()) {
+            foreach(RenderTexture t in tmpTextures) {
+                RenderTexture.ReleaseTemporary(t);
+            }
+            foreach (RenderTexture t in outputTextures) {
                 RenderTexture.ReleaseTemporary(t);
             }
         }
@@ -91,12 +100,18 @@ namespace MidasSample {
         /// <summary>
         /// Gets a resized temporary RenderTexture of the original image
         /// </summary>
-        private static RenderTexture GetResized(RenderTexture texture, int width, int height) {
+        private static RenderTexture GetResized(Texture texture, int width, int height) {
             RenderTexture tmp = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
             Graphics.Blit(texture, tmp);
             return tmp;
         }
-        
+
+        private static RenderTexture GetTmpCopy(Texture texture) {
+            RenderTexture tmp = RenderTexture.GetTemporary(texture.width, texture.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+            Graphics.Blit(texture, tmp);
+            return tmp;
+        }
+
         /// <summary>
         /// Gets a colorized temporary RenderTexture.
         /// </summary>
