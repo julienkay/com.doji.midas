@@ -62,7 +62,6 @@ namespace Doji.AI.Depth {
         private Model _model;
 
         private IWorker _worker;
-        private ITensorAllocator _allocator;
         private Ops _ops;
 
         /// <summary>
@@ -74,6 +73,11 @@ namespace Doji.AI.Depth {
         /// the (possibly resized) input texture;
         /// </summary>
         private RenderTexture _resizedInput;
+
+        /// <summary>
+        /// Caches the last predicted output
+        /// </summary>
+        private Tensor _predictedDepth;
 
 #if UNITY_EDITOR
         public static event Action<ModelType> OnModelRequested = (x) => {};
@@ -119,7 +123,7 @@ namespace Doji.AI.Depth {
             _name = modelAsset.name;
             Resources.UnloadAsset(modelAsset);
             _worker = WorkerFactory.CreateWorker(Backend, _model);
-            _allocator = new TensorCachingAllocator();
+            _ops = WorkerFactory.CreateOps(Backend, null);
 
             int width = _model.inputs[0].shape[2].value;
             int height = _model.inputs[0].shape[3].value;
@@ -160,20 +164,36 @@ namespace Doji.AI.Depth {
                 _worker.Execute(tensor);
             }
 
-            Tensor predictedDepth = _worker.PeekOutput();
-            int height = predictedDepth.shape[1];
-            int width = predictedDepth.shape[2];
+            _predictedDepth = _worker.PeekOutput();
+            int height = _predictedDepth.shape[1];
+            int width = _predictedDepth.shape[2];
 
             // normalize
             if (NormalizeDepth) {
-                Tensor normalized = Normalize(predictedDepth);
-                TextureConverter.RenderToTexture(normalized.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
-                _ops.Dispose();
-            } else {
-                TextureConverter.RenderToTexture(predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
+                _predictedDepth = Normalize(_predictedDepth);
             }
+            TextureConverter.RenderToTexture(_predictedDepth.ShallowReshape(new TensorShape(1, 1, height, width)) as TensorFloat, Result);
 
             Result.name = $"{input.name}_depth_{_name}";
+        }
+
+        /// <summary>
+        /// Returns the minimum and maximum values of the last depth prediction.
+        /// </summary>
+        /// <remarks>
+        /// Keep in mind that the predictions are relative *inverse* depth values,
+        /// i.e. min refers to the furthest away point and max to the closest point.
+        /// </remarks>
+        public (float min, float max) GetMinMax() {
+            if (_predictedDepth == null) {
+                throw new InvalidOperationException("No depth estimation has been executed yet. " +
+                    "Call 'EstimateDepth' before trying to retrieve min/max");
+            }
+            TensorFloat minT = _ops.ReduceMin(_predictedDepth as TensorFloat, null, false);
+            TensorFloat maxT = _ops.ReduceMax(_predictedDepth as TensorFloat, null, false);
+            minT.MakeReadable();
+            maxT.MakeReadable();
+            return (minT[0], maxT[0]);
         }
 
         private void Resize(ref Texture input) {
@@ -186,20 +206,16 @@ namespace Doji.AI.Depth {
         /// Normalize on-device using Tensor Ops.
         /// </summary>
         private Tensor Normalize(Tensor depth) {
-            _ops = WorkerFactory.CreateOps(Backend, _allocator);
             TensorFloat minT = _ops.ReduceMin(depth as TensorFloat, null, false);
             TensorFloat maxT = _ops.ReduceMax(depth as TensorFloat, null, false);
-
             TensorFloat a = _ops.Sub(depth as TensorFloat, minT);
             TensorFloat b = _ops.Sub(maxT, minT);
             Tensor normalized = _ops.Div(a, b);
-
             return normalized;
         }
 
         public void Dispose() {
             _worker?.Dispose();
-            _allocator?.Dispose();
             _ops?.Dispose();
             if (_resizedInput != null) {
                 _resizedInput.Release();
