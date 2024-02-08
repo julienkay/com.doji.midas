@@ -51,7 +51,7 @@ Judging the quality of a depth map from just a 2D image is hard. Consider using 
 ![samples](../images/model_samples.webp)
 
 [colab]: https://github.com/julienkay/com.doji.midas/blob/master/tools/MiDaS_ONNX_Export.ipynb
-[gh_release]: https://github.com/julienkay/com.doji.midas/releases/tag/v1.0.0
+[gh_release]: https://github.com/julienkay/com.doji.midas/releases/latest
 [docs_official]: https://github.com/isl-org/MiDaS
 [1]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/midas_v21_small_256.onnx
 [2]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/midas_v21_384.onnx
