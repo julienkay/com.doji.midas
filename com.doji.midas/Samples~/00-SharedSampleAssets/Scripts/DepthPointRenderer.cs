@@ -59,8 +59,8 @@ namespace Doji.AI.Depth.Samples {
         }
 
         private void SetScaleShift() {
-            float invScale = ((1 / MaxDepth) - (1 / MinDepth)) / (MinPred - MaxPred);
-            float invShift = (1 / MinDepth) - (invScale * MaxPred);
+            float invScale = (0.5f / MaxDepth - 0.5f / MinDepth) / (MinPred - MaxPred);
+            float invShift = 0.5f / MinDepth - (invScale * MaxPred);
             Material.SetFloat("_Scale", invScale);
             Material.SetFloat("_Shift", invShift);
         }
