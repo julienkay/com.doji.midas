@@ -27,6 +27,11 @@
       "displayName": "Webcam Sample",
       "description": "Basic example on how to perform depth estimation with a Webcam.",
       "path": "Samples~/02-WebcamSample"
+    },
+    {
+      "displayName": "Video Sample",
+      "description": "Basic example on how to perform depth estimation on a VideoPlayer texture,",
+      "path": "Samples~/03-VideoSample"
     }
   ]
 }

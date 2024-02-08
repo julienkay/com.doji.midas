@@ -85,10 +85,10 @@ namespace Doji.AI.Depth.Samples {
         private void Update() {
             if (WebCam != null && _midas != null && !_paused) {
                 _midas.EstimateDepth(WebCam);
-                var extrema = _midas.GetMinMax();
+                var (min, max) = _midas.GetMinMax();
                 if (_pointRenderer != null) {
-                    _pointRenderer.MinPred = extrema.min;
-                    _pointRenderer.MaxPred = extrema.max;
+                    _pointRenderer.MinPred = min;
+                    _pointRenderer.MaxPred = max;
                 }
             }
         }
