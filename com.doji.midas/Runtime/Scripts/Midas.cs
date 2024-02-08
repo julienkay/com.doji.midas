@@ -91,7 +91,7 @@ namespace Doji.AI.Depth {
             InitializeNetwork();
         }
 
-        internal Midas(ModelAsset modelAsset) {
+        public Midas(ModelAsset modelAsset) {
             _modelType = ModelType.Unknown;
             InitializeNetwork(modelAsset);
         }
