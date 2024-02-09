@@ -7,7 +7,7 @@ Monocular Depth Estimation with Unity Sentis
 
 [**Asset Store**](https://assetstore.unity.com/packages/slug/268501)
 
-[OpenUPM] · [Documentation] · [Hugging Face]
+[OpenUPM] · [Documentation] · [Forum] · [Hugging Face]
 
 This project is dual-licensed. You can either get it here on GitHub under the MIT License, or — if you find it useful and want to support the development — for a small price on the [Unity Asset Store].
 
@@ -20,4 +20,5 @@ Please refer to the [Documentation] for usage guides.
 [Unity Asset Store]: https://assetstore.unity.com/packages/slug/268501
 [OpenUPM]: https://openupm.com/packages/com.doji.midas
 [Documentation]: https://docs.doji-tech.com/com.doji.midas
+[Forum]: https://forum.unity.com/threads/released-midas-monocular-depth-estimation.1539250/
 [Hugging Face]: https://huggingface.co/julienkay/sentis-MiDaS
