@@ -5,7 +5,7 @@
 # Midas
 Monocular Depth Estimation with Unity Sentis using [MiDaS](https://github.com/isl-org/MiDaS)[^1] models
 
-[**Asset Store**](https://assetstore.unity.com/packages/slug/268501)
+[**Asset Store**](https://assetstore.unity.com/packages/tools/ai-ml-integration/midas-monocular-depth-estimation-268501?aid=1101l3w5RJ&pubref=gh)
 
 [OpenUPM] · [Documentation] · [Forum] · [Hugging Face]
 
@@ -22,7 +22,7 @@ Please refer to the [Documentation] for usage guides.
 [^1]: [René Ranftl and Katrin Lasinger and David Hafner and Konrad Schindler and Vladlen Koltun. Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer. IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 44, no. 3, 2022](https://github.com/isl-org/MiDaS)
 
 [Midas]: https://github.com/isl-org/MiDaS
-[Unity Asset Store]: https://assetstore.unity.com/packages/slug/268501
+[Unity Asset Store]: https://assetstore.unity.com/packages/tools/ai-ml-integration/midas-monocular-depth-estimation-268501?aid=1101l3w5RJ&pubref=gh
 [OpenUPM]: https://openupm.com/packages/com.doji.midas
 [Documentation]: https://docs.doji-tech.com/com.doji.midas
 [Forum]: https://forum.unity.com/threads/released-midas-monocular-depth-estimation.1539250/
