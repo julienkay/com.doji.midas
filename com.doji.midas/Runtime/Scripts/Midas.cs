@@ -61,7 +61,7 @@ namespace Doji.AI.Depth {
         /// </summary>
         private Model _model;
 
-        private IWorker _worker;
+        private Worker _worker;
         private Normalization _normalization;
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Doji.AI.Depth {
         /// <summary>
         /// Caches the last predicted output
         /// </summary>
-        private TensorFloat _predictedDepth;
+        private Tensor<float> _predictedDepth;
 
 #if UNITY_EDITOR
         public static event Action<ModelType> OnModelRequested = (x) => {};
@@ -122,11 +122,11 @@ namespace Doji.AI.Depth {
             _model = ModelLoader.Load(modelAsset);
             _name = modelAsset.name;
             Resources.UnloadAsset(modelAsset);
-            _worker = WorkerFactory.CreateWorker(Backend, _model);
+            _worker = new Worker(_model, Backend);
 
-            int width = _model.inputs[0].shape[2].value;
-            int height = _model.inputs[0].shape[3].value;
-            _normalization = new Normalization(width, height, Backend);
+            int width = _model.inputs[0].shape.Get(2);
+            int height = _model.inputs[0].shape.Get(3);
+            _normalization = new Normalization(_model.inputs[0].shape, Backend);
 
             InitInputTexture(width, height);
             InitOutputTexture(width, height);
@@ -160,19 +160,18 @@ namespace Doji.AI.Depth {
                 Resize(ref input);
             }
 
-            using (var tensor = TextureConverter.ToTensor(_resizedInput, _resizedInput.width, _resizedInput.height, 3)) {
-                _worker.Execute(tensor);
-            }
+            using var tensor = TextureConverter.ToTensor(_resizedInput, _resizedInput.width, _resizedInput.height, 3);
+            _worker.Schedule(tensor);
 
-            _predictedDepth = _worker.PeekOutput() as TensorFloat;
+            _predictedDepth = _worker.PeekOutput() as Tensor<float>;
             int height = _predictedDepth.shape[1];
             int width = _predictedDepth.shape[2];
+            _predictedDepth.Reshape(_predictedDepth.shape.Unsqueeze(1));
 
             // normalize
             if (NormalizeDepth) {
                 _predictedDepth = Normalize(_predictedDepth);
             }
-            _predictedDepth.Reshape(new TensorShape(1, 1, height, width));
             TextureConverter.RenderToTexture(_predictedDepth, Result);
 
             Result.name = $"{input.name}_depth_{_name}";
@@ -190,6 +189,8 @@ namespace Doji.AI.Depth {
                 throw new InvalidOperationException("No depth estimation has been executed yet. " +
                     "Call 'EstimateDepth' before trying to retrieve min/max");
             }
+            // TODO: In cases where we already normalize the _predictedDepth anyway, we could
+            // get the min/max data without having to run the normalization again.
             return _normalization.GetMinMax(_predictedDepth);
         }
 
@@ -202,7 +203,7 @@ namespace Doji.AI.Depth {
         /// <summary>
         /// Normalize on-device using Tensor Ops.
         /// </summary>
-        private TensorFloat Normalize(TensorFloat depth) {
+        private Tensor<float> Normalize(Tensor<float> depth) {
             return _normalization.Execute(depth);
         }
 

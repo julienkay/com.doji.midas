@@ -9,57 +9,52 @@ namespace Doji.AI.Depth {
     /// </summary>
     internal class Normalization : IDisposable {
 
-        private IWorker _normalizationModel;
-        private IBackend _backend;
-        private TensorFloat _min;
-        private TensorFloat _max;
+        private Worker _worker;
 
-        public Normalization(int width, int height, BackendType backendType) {
-            _normalizationModel = InitModel(width, height);
-            _backend = WorkerFactory.CreateBackend(backendType);
-            _min = TensorFloat.AllocNoData(new TensorShape(1));
-            _max = TensorFloat.AllocNoData(new TensorShape(1));
+        public Normalization(DynamicTensorShape inputShape, BackendType backendType) {
+            inputShape.Set(1, 1); // we pass the shape of model input (rgb), depth predictions only have a single channel
+            _worker = InitModel(inputShape, backendType);
         }
 
-        public static IWorker InitModel(int width, int height) {
-            var shape = new TensorShape(1, 1, 256, 256);
-
-            var inputDefs = InputDef.Float(shape);
-
-            FunctionalTensor normalizationModel(FunctionalTensor depth) {
-                var min = Functional.ReduceMin(depth, new int[] { }, false);
-                var max = Functional.ReduceMax(depth, new int[] { }, false);
-                return (depth - min ) / (max - min);
-            }
-            var model = Functional.Compile(normalizationModel, inputDefs);
-            var worker = WorkerFactory.CreateWorker(BackendType.GPUCompute, model);
-
+        public static Worker InitModel(DynamicTensorShape shape, BackendType backendType) {
+            FunctionalGraph graph = new FunctionalGraph();
+            FunctionalTensor depth = graph.AddInput<float>(shape);
+            var min = Functional.ReduceMin(depth, new int[] { }, false);
+            var max = Functional.ReduceMax(depth, new int[] { }, false);
+            var normalized = (depth - min ) / (max - min);
+            var model = graph.Compile(normalized, min, max);
+            var worker = new Worker(model, backendType);
             return worker;
         }
 
-        public TensorFloat Execute(TensorFloat input) {
-            _normalizationModel.Execute(input);
-            return _normalizationModel.PeekOutput("output_0") as TensorFloat;
+        public Tensor<float> Execute(Tensor<float> depth) {
+            if (depth == null) {
+                throw new ArgumentNullException("Depth to normalize can not be null", nameof(depth));
+            }
+            _worker.Schedule(depth);
+            return _worker.PeekOutput("output_0") as Tensor<float>;
         }
 
-        public (float min, float max) GetMinMax(TensorFloat depth) {
+        /// <summary>
+        /// Returns the min and max values of the depth prediction.
+        /// </summary>
+        public (float min, float max) GetMinMax(Tensor<float> depth) {
             if (depth == null) {
-                throw new ArgumentException("Depth to normalize can not be null", nameof(depth));
+                throw new ArgumentNullException("Depth to normalize can not be null", nameof(depth));
             }
-
-            _backend.ReduceMin(depth, _min, null);
-            _backend.ReduceMax(depth, _max, null);
-            using TensorFloat min = _min.ReadbackAndClone();
-            using TensorFloat max = _max.ReadbackAndClone();
-
-            return (min[0], max[0]);
+            _worker.Schedule(depth);
+            Tensor<float> min = _worker.PeekOutput("output_1") as Tensor<float>;
+            Tensor<float> max = _worker.PeekOutput("output_2") as Tensor<float>;
+            min = min.ReadbackAndClone();
+            max = max.ReadbackAndClone();
+            var minmax = (min[0], max[0]);
+            min.Dispose();
+            max.Dispose();
+            return minmax;
         }
 
         public void Dispose() {
-            _normalizationModel?.Dispose();
-            _backend?.Dispose();
-            _min?.Dispose();
-            _max?.Dispose();
+            _worker?.Dispose();
         }
     }
 }
