@@ -31,31 +31,42 @@ namespace Doji.AI.Depth.Samples {
         private ComputeBuffer _argsBuffer;
         private Bounds _bounds = new Bounds(Vector3.zero, Vector3.one * int.MaxValue);
 
-        private void Start() {
-            Material.SetTexture("_MainTex", Source);
-            Material.SetTexture("_Depth", Depth);
-            _argsBuffer = CreateArgsBuffer(Depth.width * Depth.height);
-        }
+        private int _instanceCount = -1;
 
         private void Update() {
+            if (Source == null || Depth == null) {
+                return;
+            }
+
+            Material.SetTexture("_MainTex", Source);
+            Material.SetTexture("_Depth", Depth);
             Material.SetMatrix("_Transform", transform.localToWorldMatrix);
             Material.SetVector("_CameraWorldPos", Camera.main.transform.position);
             SetScaleShift();
+
+            UpdateBuffer(Depth.width * Depth.height);
 
             // Render points via instancing
             Graphics.DrawMeshInstancedIndirect(InstancingMesh, 0, Material, _bounds, _argsBuffer);
         }
 
-        private ComputeBuffer CreateArgsBuffer(int instanceCount) {
-            ComputeBuffer argsBuffer = new ComputeBuffer(1, 5 * sizeof(uint), ComputeBufferType.IndirectArguments);
+        private void UpdateBuffer(int instanceCount) {
+            if (_instanceCount == instanceCount && _argsBuffer != null) {
+                return;
+            }
+            _instanceCount = instanceCount;
+
+            if (_argsBuffer != null) {
+                Dispose();
+            }
+            _argsBuffer = new ComputeBuffer(1, 5 * sizeof(uint), ComputeBufferType.IndirectArguments);
             // Indirect args
             uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
             args[0] = InstancingMesh.GetIndexCount(0);
             args[1] = (uint)instanceCount;
             args[2] = InstancingMesh.GetIndexStart(0);
             args[3] = InstancingMesh.GetBaseVertex(0);
-            argsBuffer.SetData(args);
-            return argsBuffer;
+            _argsBuffer.SetData(args);
         }
 
         private void SetScaleShift() {
@@ -75,6 +86,7 @@ namespace Doji.AI.Depth.Samples {
 
         private void Dispose() {
             _argsBuffer?.Dispose();
+            _argsBuffer = null;
         }
 
 #if UNITY_EDITOR
