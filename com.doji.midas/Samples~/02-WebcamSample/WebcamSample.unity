@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -357,7 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0d781ded165e9749aa2b43fc37a5842, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: 2
+  Model: 0
   WebCam: {fileID: 0}
   Image: {fileID: 1871699018}
   Dropdown: {fileID: 1804461707}
