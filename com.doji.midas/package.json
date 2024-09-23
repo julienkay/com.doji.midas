@@ -30,8 +30,13 @@
     },
     {
       "displayName": "Video Sample",
-      "description": "Basic example on how to perform depth estimation on a VideoPlayer texture,",
+      "description": "Basic example on how to perform depth estimation on a VideoPlayer texture.",
       "path": "Samples~/03-VideoSample"
+    },
+    {
+      "displayName": "Async Webcam Sample",
+      "description": "Example on how to reduce lag by spreading the execution over multiple frames.",
+      "path": "Samples~/04-WebcamSampleAsync"
     }
   ]
 }

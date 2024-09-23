@@ -1,8 +1,12 @@
 using System;
+using System.Collections;
+using System.Threading.Tasks;
 using Unity.Sentis;
 using UnityEngine;
 
 namespace Doji.AI.Depth {
+
+    public delegate void EstimationFinished(Texture estimatedDepth);
 
     /// <summary>
     /// A class that allows to run Midas models
@@ -52,6 +56,12 @@ namespace Doji.AI.Depth {
         public bool NormalizeDepth { get; set; } = true;
 
         /// <summary>
+        /// Whether to automatically resize the texture passed to <see cref="EstimateDepth"/>
+        /// to the resolution that the specific neural network expects.
+        /// </summary>
+        public bool AutoResize { get; set; } = true;
+
+        /// <summary>
         /// A RenderTexture that contains the estimated depth.
         /// </summary>
         public RenderTexture Result { get; set; }
@@ -82,6 +92,8 @@ namespace Doji.AI.Depth {
 #if UNITY_EDITOR
         public static event Action<ModelType> OnModelRequested = (x) => {};
 #endif
+
+        private bool _estimationRunning = false;
 
         /// <summary>
         /// Initializes a new instance of MiDaS.
@@ -154,9 +166,16 @@ namespace Doji.AI.Depth {
             Result.name = $"depth_{_name}";
         }
 
-        public void EstimateDepth(Texture input, bool autoResize = true) {
-            // resize
-            if (autoResize) {
+        /// <summary>
+        /// Run depth estimation on the given <paramref name="input"/> texture.
+        /// </summary>
+        /// <param name="input"></param>
+        public void EstimateDepth(Texture input) {
+            if (CheckIsRunning()) {
+                return;
+            }
+
+            if (AutoResize) {
                 Resize(ref input);
             }
 
@@ -175,6 +194,59 @@ namespace Doji.AI.Depth {
             TextureConverter.RenderToTexture(_predictedDepth, Result);
 
             Result.name = $"{input.name}_depth_{_name}";
+            _estimationRunning = false;
+        }
+
+        /// <summary>
+        /// Runs depth estimation, but distributes the computation over several frames.
+        /// This is done by running only the given number of layers of the neural network per frame.
+        /// To call this method use <see cref="MonoBehaviour.StartCoroutine"/>.
+        /// </summary>
+        public IEnumerator _EstimateDepth(Texture input, EstimationFinished callback = null, int numLayersPerFrame = 20) {
+            if (CheckIsRunning()) {
+                yield break;
+            }
+
+            if (AutoResize) {
+                Resize(ref input);
+            }
+
+            using var tensor = TextureConverter.ToTensor(_resizedInput, _resizedInput.width, _resizedInput.height, 3);
+            var schedule = _worker.ScheduleIterable(tensor);
+            int i = 0;
+            while (schedule.MoveNext()) {
+                if (++i % numLayersPerFrame == 0) {
+                    yield return null;
+                }
+            }
+
+            _predictedDepth = _worker.PeekOutput() as Tensor<float>;
+            int height = _predictedDepth.shape[1];
+            int width = _predictedDepth.shape[2];
+            _predictedDepth.Reshape(_predictedDepth.shape.Unsqueeze(1));
+
+            // normalize
+            if (NormalizeDepth) {
+                _predictedDepth = Normalize(_predictedDepth);
+            }
+            TextureConverter.RenderToTexture(_predictedDepth, Result);
+
+            Result.name = $"{input.name}_depth_{_name}";
+            _estimationRunning = false;
+
+            callback?.Invoke(Result);
+        }
+
+        /// <summary>
+        /// Runs depth estimation, but distributes the computation over several frames.
+        /// This is done by running only the given number of layers of the neural network per frame.
+        /// </summary>
+        public void EstimateDepthAsync(Texture input, EstimationFinished callback, int numLayersPerFrame = 20) {
+            CoroutineRunner.Start(_EstimateDepth(input, callback, numLayersPerFrame));
+        }
+
+        private async Task Test() {
+            await Task.Delay(5000);
         }
 
         /// <summary>
@@ -207,6 +279,15 @@ namespace Doji.AI.Depth {
             return _normalization.Execute(depth);
         }
 
+        private bool CheckIsRunning() {
+            if (_estimationRunning) {
+                Debug.LogWarning("You are trying to run the model while that last prediction has not yet finished.");
+                return true;
+            }
+            _estimationRunning = true;
+            return false;
+        }
+
         public void Dispose() {
             _worker?.Dispose();
             _normalization?.Dispose();
@@ -218,6 +299,10 @@ namespace Doji.AI.Depth {
                 UnityEngine.Object.Destroy(_resizedInput);
 #endif
             }
+        }
+
+        public void EstimateDepth(Texture webCam, object onNewDepthPredicted) {
+            throw new NotImplementedException();
         }
     }
 }
