@@ -4,7 +4,7 @@
   "displayName": "MiDaS",
   "description": "Monocular Depth Estimation with Unity Sentis",
   "dependencies": {
-    "com.unity.sentis": "2.0.0"
+    "com.unity.sentis": "2.1.0"
   },
   "author": {
     "name": "Doji Technologies",

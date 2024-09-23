@@ -11,7 +11,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.sentis": "2.0.0"
+        "com.unity.sentis": "2.1.0"
       }
     },
     "com.unity.asset-store-tools": {
@@ -31,20 +31,20 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
-      "version": "2.2.1",
+      "version": "2.4.3",
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.8",
+        "com.unity.burst": "1.8.13",
+        "com.unity.test-framework": "1.4.3",
         "com.unity.nuget.mono-cecil": "1.11.4",
-        "com.unity.modules.unityanalytics": "1.0.0",
-        "com.unity.test-framework.performance": "3.0.2"
+        "com.unity.test-framework.performance": "3.0.3"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
-      "version": "1.0.6",
-      "depth": 2,
+      "version": "2.0.3",
+      "depth": 4,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -73,29 +73,29 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.sentis": {
-      "version": "2.0.0",
+      "version": "2.1.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.12",
-        "com.unity.collections": "2.2.1",
+        "com.unity.burst": "1.8.17",
+        "com.unity.collections": "2.4.3",
         "com.unity.modules.imageconversion": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.33",
-      "depth": 1,
+      "version": "1.4.3",
+      "depth": 3,
       "source": "registry",
       "dependencies": {
-        "com.unity.ext.nunit": "1.0.6",
+        "com.unity.ext.nunit": "2.0.3",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework.performance": {
-      "version": "3.0.2",
+      "version": "3.0.3",
       "depth": 3,
       "source": "registry",
       "dependencies": {
@@ -225,15 +225,6 @@
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      }
-    },
-    "com.unity.modules.unityanalytics": {
-      "version": "1.0.0",
-      "depth": 3,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
