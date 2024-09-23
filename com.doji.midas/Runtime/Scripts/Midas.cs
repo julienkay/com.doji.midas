@@ -199,7 +199,7 @@ namespace Doji.AI.Depth {
 
         /// <summary>
         /// Runs depth estimation, but distributes the computation over several frames.
-        /// This is done by running only the given number of layers of the neural network per frame.
+        /// This is done by running only the given number of layers of the neural network at a time.
         /// To call this method use <see cref="MonoBehaviour.StartCoroutine"/>.
         /// </summary>
         public IEnumerator _EstimateDepth(Texture input, EstimationFinished callback = null, int numLayersPerFrame = 20) {

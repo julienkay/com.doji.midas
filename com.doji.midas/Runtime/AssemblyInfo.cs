@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("Doji.Midas")]
 [assembly: AssemblyCopyright("Copyright © Julien Kipp 2023-2024")]
 
-[assembly: AssemblyVersion("1.2.0.0")]
-[assembly: AssemblyFileVersion("1.2.0.0")]
-[assembly: AssemblyInformationalVersion("1.2.0")]
+[assembly: AssemblyVersion("1.3.0.0")]
+[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyInformationalVersion("1.3.0")]
 [assembly: InternalsVisibleTo("Doji.Midas.Editor")]
