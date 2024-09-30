@@ -25,5 +25,5 @@ Please refer to the [Documentation] for usage guides.
 [Unity Asset Store]: https://assetstore.unity.com/packages/tools/ai-ml-integration/midas-monocular-depth-estimation-268501?aid=1101l3w5RJ&pubref=gh
 [OpenUPM]: https://openupm.com/packages/com.doji.midas
 [Documentation]: https://docs.doji-tech.com/com.doji.midas
-[Forum]: https://forum.unity.com/threads/released-midas-monocular-depth-estimation.1539250/
+[Forum]: https://discussions.unity.com/t/released-midas-monocular-depth-estimation/938339?u=julienkay
 [Hugging Face]: https://huggingface.co/julienkay/sentis-MiDaS
