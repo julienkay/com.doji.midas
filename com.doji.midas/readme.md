@@ -1,6 +1,6 @@
 # com.doji.midas
 
-This is a Unity package that allows users to do Monocular Depth Estimation with Unity Sentis using [MiDaS]
+This is a Unity package that allows users to do Monocular Depth Estimation with Unity Inference Engine using [MiDaS]
 
 ## Usage
 

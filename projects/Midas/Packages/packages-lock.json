@@ -11,8 +11,19 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.sentis": "2.1.0"
+        "com.unity.ai.inference": "2.2.1"
       }
+    },
+    "com.unity.ai.inference": {
+      "version": "2.2.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.8.17",
+        "com.unity.collections": "2.4.3",
+        "com.unity.modules.imageconversion": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.asset-store-tools": {
       "version": "file:com.unity.asset-store-tools",
@@ -79,17 +90,6 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.sentis": {
-      "version": "2.1.2",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.burst": "1.8.17",
-        "com.unity.collections": "2.4.3",
-        "com.unity.modules.imageconversion": "1.0.0"
-      },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {

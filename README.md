@@ -3,7 +3,7 @@
 </a>
 
 # Midas
-Monocular Depth Estimation with Unity Sentis using [MiDaS](https://github.com/isl-org/MiDaS)[^1] models
+Monocular Depth Estimation with Unity Inference Engine using [MiDaS](https://github.com/isl-org/MiDaS)[^1] models
 
 [**Asset Store**](https://assetstore.unity.com/packages/tools/ai-ml-integration/midas-monocular-depth-estimation-268501?aid=1101l3w5RJ&pubref=gh)
 

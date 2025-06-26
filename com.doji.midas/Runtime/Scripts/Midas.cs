@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Unity.Sentis;
+using Unity.InferenceEngine;
 using UnityEngine;
 
 namespace Doji.AI.Depth {
