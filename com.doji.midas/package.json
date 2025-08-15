@@ -4,7 +4,7 @@
   "displayName": "MiDaS",
   "description": "Monocular Depth Estimation with Unity Inference Engine",
   "dependencies": {
-    "com.unity.ai.inference": "2.2.1"
+    "com.unity.ai.inference": "2.3.0"
   },
   "author": {
     "name": "Doji Technologies",
