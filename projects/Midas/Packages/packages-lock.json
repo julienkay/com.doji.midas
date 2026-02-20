@@ -11,7 +11,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.ai.inference": "2.3.0"
+        "com.unity.ai.inference": "2.5.0"
       }
     },
     "com.unity.ai.inference": {
