@@ -85,6 +85,11 @@ namespace Doji.AI.Depth {
         private RenderTexture _resizedInput;
 
         /// <summary>
+        /// the input tensor;
+        /// </summary>
+        private Tensor<float> _input;
+
+        /// <summary>
         /// Caches the last predicted output
         /// </summary>
         private Tensor<float> _predictedDepth;
@@ -141,6 +146,7 @@ namespace Doji.AI.Depth {
             _normalization = new Normalization(_model.inputs[0].shape, Backend);
 
             InitInputTexture(width, height);
+            InitInputTensor(width, height);
             InitOutputTexture(width, height);
         }
 
@@ -151,7 +157,11 @@ namespace Doji.AI.Depth {
                 };
             }
         }
-        
+
+        private void InitInputTensor(int width, int height) {
+            _input = new Tensor<float>(new TensorShape(1, 3, height, width));
+        }
+
         private void InitOutputTexture(int width, int height) {
             if (Result != null) {
                 if (Result.width != width || Result.height != height) {
@@ -179,8 +189,8 @@ namespace Doji.AI.Depth {
                 Resize(ref input);
             }
 
-            using var tensor = TextureConverter.ToTensor(_resizedInput, _resizedInput.width, _resizedInput.height, 3);
-            _worker.Schedule(tensor);
+            TextureConverter.ToTensor(_resizedInput, _input);
+            _worker.Schedule(_input);
 
             _predictedDepth = _worker.PeekOutput() as Tensor<float>;
             int height = _predictedDepth.shape[1];
@@ -211,8 +221,8 @@ namespace Doji.AI.Depth {
                 Resize(ref input);
             }
 
-            using var tensor = TextureConverter.ToTensor(_resizedInput, _resizedInput.width, _resizedInput.height, 3);
-            var schedule = _worker.ScheduleIterable(tensor);
+            TextureConverter.ToTensor(_resizedInput, _input);
+            var schedule = _worker.ScheduleIterable(_input);
             int i = 0;
             while (schedule.MoveNext()) {
                 if (++i % numLayersPerFrame == 0) {
@@ -299,6 +309,7 @@ namespace Doji.AI.Depth {
                 UnityEngine.Object.Destroy(_resizedInput);
 #endif
             }
+            _input?.Dispose();
         }
 
         public void EstimateDepth(Texture webCam, object onNewDepthPredicted) {
