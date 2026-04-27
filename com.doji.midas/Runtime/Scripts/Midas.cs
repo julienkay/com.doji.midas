@@ -108,9 +108,10 @@ namespace Doji.AI.Depth {
             InitializeNetwork();
         }
 
-        public Midas(ModelAsset modelAsset) {
+        public Midas(Model model) {
             _modelType = ModelType.Unknown;
-            InitializeNetwork(modelAsset);
+            _name = "unknown-midas";
+            InitializeNetwork(model);
         }
 
         private void InitializeNetwork() {
@@ -123,22 +124,20 @@ namespace Doji.AI.Depth {
 #endif
 
             ModelAsset modelAsset = Resources.Load<ModelAsset>(_modelType.ResourcePath());
+            _name = modelAsset.name;
 
             if (modelAsset == null) {
-                throw new Exception($"Could not load model '{ModelType}'. Make sure the model exists in your project.");
+                throw new Exception($"Could not load model file '{ModelType}' from Resources. Make sure the model exists in your project.");
             }
 
-            InitializeNetwork(modelAsset);
+            var model = ModelLoader.Load(modelAsset);
+            Resources.UnloadAsset(modelAsset);
+
+            InitializeNetwork(model);
         }
 
-        private void InitializeNetwork(ModelAsset modelAsset) {
-            if (modelAsset == null) {
-                throw new ArgumentException("ModelAsset was null", nameof(modelAsset));
-            }
-
-            _model = ModelLoader.Load(modelAsset);
-            _name = modelAsset.name;
-            Resources.UnloadAsset(modelAsset);
+        private void InitializeNetwork(Model model) {
+            _model = model;
             _worker = new Worker(_model, Backend);
 
             int width = _model.inputs[0].shape.Get(2);

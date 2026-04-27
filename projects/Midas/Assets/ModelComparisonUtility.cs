@@ -41,7 +41,14 @@ namespace MidasSample {
                     continue; // skip because this one seems broken?
                 }
 
-                if (!File.Exists(Path.Combine("Packages", "com.doji.midas", "Runtime", "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx"))) {
+                if (!File.Exists(Path.Combine("Packages", "com.doji.midas", "Runtime", "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx")) &&
+                    !File.Exists(Path.Combine(Application.dataPath, "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx"))) {
+
+                    string fullPath = Path.Combine(Application.dataPath, "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx");
+                    Debug.Log("Checking: " + fullPath);
+                    Debug.Log("Exists: " + File.Exists(fullPath));
+
+                    Debug.LogWarning($"Model {modelType} could not be loaded via 'Resources/ONNX'. Skipping...");
                     outputTextures.Add(null);
                     continue;
                 }
