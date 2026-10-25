@@ -1,0 +1,9 @@
+# Models come from Hugging Face through tools.doji.hf-hub. Never commit them.
+*.onnx
+*.onnx.meta
+*.onnx_data
+*.onnx_data.meta
+*.onnx.data
+*.onnx.data.meta
+*.sentis
+*.sentis.meta

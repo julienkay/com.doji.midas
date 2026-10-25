@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "models": [
+        {
+            "id": "julienkay/sentis-MiDaS",
+            "files": [
+                { "path": "onnx/midas_v21_small_256.onnx" },
+                { "path": "onnx/midas_v21_384.onnx", "optional": true },
+                { "path": "onnx/dpt_beit_large_512.onnx", "optional": true },
+                { "path": "onnx/dpt_beit_large_384.onnx", "optional": true },
+                { "path": "onnx/dpt_beit_base_384.onnx", "optional": true },
+                { "path": "onnx/dpt_swin2_large_384.onnx", "optional": true },
+                { "path": "onnx/dpt_swin2_base_384.onnx", "optional": true },
+                { "path": "onnx/dpt_swin2_tiny_256.onnx", "optional": true },
+                { "path": "onnx/dpt_swin_large_384.onnx", "optional": true },
+                { "path": "onnx/dpt_next_vit_large_384.onnx", "optional": true },
+                { "path": "onnx/dpt_levit_224.onnx", "optional": true },
+                { "path": "onnx/dpt_large_384.onnx", "optional": true }
+            ]
+        }
+    ]
+}

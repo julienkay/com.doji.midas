@@ -11,55 +11,42 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.ai.inference": "2.5.0"
+        "tools.doji.hf-hub": "1.0.0",
+        "com.unity.ai.inference": "2.6.1"
       }
     },
     "com.unity.ai.inference": {
-      "version": "2.5.0",
+      "version": "2.6.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.8.17",
-        "com.unity.dt.app-ui": "1.3.3",
+        "com.unity.dt.app-ui": "1.3.6",
         "com.unity.collections": "2.4.3",
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.unity.modules.imageconversion": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.asset-store-tools": {
-      "version": "file:com.unity.asset-store-tools",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
-      }
-    },
     "com.unity.burst": {
-      "version": "1.8.27",
+      "version": "2.0.0",
       "depth": 2,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.mathematics": "1.2.1",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.collections": {
-      "version": "2.6.2",
+      "version": "6.6.0",
       "depth": 2,
-      "source": "registry",
+      "source": "builtin",
       "dependencies": {
-        "com.unity.burst": "1.8.23",
-        "com.unity.mathematics": "1.3.2",
+        "com.unity.burst": "1.8.25",
+        "com.unity.nuget.mono-cecil": "1.11.6",
         "com.unity.test-framework": "1.4.6",
-        "com.unity.nuget.mono-cecil": "1.11.5",
-        "com.unity.test-framework.performance": "3.0.3"
-      },
-      "url": "https://packages.unity.com"
+        "com.unity.test-framework.performance": "3.2.0"
+      }
     },
     "com.unity.dt.app-ui": {
-      "version": "2.1.1",
+      "version": "2.1.13",
       "depth": 2,
       "source": "registry",
       "dependencies": {
@@ -71,10 +58,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
-      "version": "2.0.5",
-      "depth": 2,
+      "version": "2.1.0",
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.ide.rider": {
+      "version": "3.0.40",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ext.nunit": "1.0.6"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
       "version": "2.0.27",
@@ -83,13 +79,6 @@
       "dependencies": {
         "com.unity.test-framework": "1.1.33"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.mathematics": {
-      "version": "1.3.3",
-      "depth": 3,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
@@ -107,32 +96,68 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.6.0",
+      "version": "1.8.0",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.ext.nunit": "2.0.3",
+        "com.unity.ext.nunit": "2.1.0",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
     "com.unity.test-framework.performance": {
-      "version": "3.2.0",
+      "version": "6.6.0",
       "depth": 3,
-      "source": "registry",
+      "source": "builtin",
       "dependencies": {
         "com.unity.test-framework": "1.1.33",
         "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
+      }
     },
     "com.unity.ugui": {
-      "version": "2.0.0",
+      "version": "2.6.0",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
-        "com.unity.modules.imgui": "1.0.0"
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.modules.physics": "1.0.0"
+      }
+    },
+    "tools.doji.downloads": {
+      "version": "file:../../../../tools.doji.downloads/tools.doji.downloads",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "tools.doji.formats.onnx": {
+      "version": "file:../../../../tools.doji.formats.onnx/tools.doji.formats.onnx",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "tools.doji.hf-hub": {
+      "version": "file:../../../../tools.doji.hf-hub/tools.doji.hf-hub",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "tools.doji.downloads": "1.0.0",
+        "tools.doji.formats.onnx": "1.0.0",
+        "com.unity.ai.inference": "2.6.1",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "tools.doji.onnx-model-loader": {
+      "version": "file:../../../../tools.doji.onnx-model-loader/tools.doji.onnx-model-loader",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "tools.doji.formats.onnx": "1.0.0",
+        "com.unity.ai.inference": "2.6.1"
       }
     },
     "com.unity.modules.ai": {
@@ -145,7 +170,9 @@
       "version": "1.0.0",
       "depth": 0,
       "source": "builtin",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.modules.jsonserialize": "1.0.0"
+      }
     },
     "com.unity.modules.animation": {
       "version": "1.0.0",
@@ -205,6 +232,14 @@
       "version": "1.0.0",
       "depth": 0,
       "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.physicscore2d": "1.0.0"
+      }
+    },
+    "com.unity.modules.physicscore2d": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
       "dependencies": {}
     },
     "com.unity.modules.screencapture": {
@@ -223,12 +258,26 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
+    "com.unity.modules.tetgen": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.modules.tilemap": {
       "version": "1.0.0",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.physics2d": "1.0.0"
+      }
+    },
+    "com.unity.modules.timelinefoundation": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
     "com.unity.modules.ui": {
@@ -246,7 +295,8 @@
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.modules.hierarchycore": "1.0.0",
-        "com.unity.modules.physics": "1.0.0"
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.animation": "1.0.0"
       }
     },
     "com.unity.modules.unitywebrequest": {
@@ -303,16 +353,6 @@
         "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0"
-      }
-    },
-    "com.unity.modules.vr": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.physics": "1.0.0",
-        "com.unity.modules.xr": "1.0.0"
       }
     },
     "com.unity.modules.xr": {

@@ -41,31 +41,24 @@ namespace MidasSample {
                     continue; // skip because this one seems broken?
                 }
 
-                if (!File.Exists(Path.Combine("Packages", "com.doji.midas", "Runtime", "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx")) &&
-                    !File.Exists(Path.Combine(Application.dataPath, "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx"))) {
+                try {
+                    using (Midas midas = new Midas(modelType)) {
+                        RenderTexture depth = midas.Result;
+                        midas.EstimateDepth(inputTexture);
 
-                    string fullPath = Path.Combine(Application.dataPath, "Resources", "ONNX", $"{modelType.ToString().ToLower()}.onnx");
-                    Debug.Log("Checking: " + fullPath);
-                    Debug.Log("Exists: " + File.Exists(fullPath));
+                        // resize to inputTexture dimensions
+                        int width = inputTexture.width;
+                        int height = inputTexture.height;
+                        RenderTexture resizedDepth = GetResized(depth, width, height);
+                        tmpTextures.Add(resizedDepth);
 
-                    Debug.LogWarning($"Model {modelType} could not be loaded via 'Resources/ONNX'. Skipping...");
+                        // apply color scheme
+                        RenderTexture coloredDepth = GetColorized(resizedDepth, ColorMaps.magma);
+                        outputTextures.Add(coloredDepth);
+                    }
+                } catch (Exception exception) {
+                    Debug.LogWarning($"Model {modelType} could not be loaded from HF Hub runtime data. Sync MiDaS repository in HF Hub first.\n{exception.Message}");
                     outputTextures.Add(null);
-                    continue;
-                }
-
-                using (Midas midas = new Midas(modelType)) {
-                    RenderTexture depth = midas.Result;
-                    midas.EstimateDepth(inputTexture);
-
-                    // resize to inputTexture dimensions
-                    int width = inputTexture.width;
-                    int height = inputTexture.height;
-                    RenderTexture resizedDepth = GetResized(depth, width, height);
-                    tmpTextures.Add(resizedDepth);
-
-                    // apply color scheme
-                    RenderTexture coloredDepth = GetColorized(resizedDepth, ColorMaps.magma);
-                    outputTextures.Add(coloredDepth);
                 }
             }
 

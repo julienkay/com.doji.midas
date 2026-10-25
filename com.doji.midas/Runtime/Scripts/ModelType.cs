@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 namespace Doji.AI.Depth {
 
@@ -72,14 +71,22 @@ namespace Doji.AI.Depth {
     }
 
     internal static class ModelExtensions {
-
-        private const string BASE_URL = "https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/";
+        internal const string RepositoryId = "julienkay/sentis-MiDaS";
 
         /// <summary>
-        /// Returns the download link to the model weights for this model.
+        /// The package whose hf-hub-manifest.json selects the model files.
         /// </summary>
-        public static Uri GetUrl(this ModelType model) {
-            return new Uri($"{BASE_URL}{model.FileName()}.onnx");
+        internal const string PackageId = "com.doji.midas";
+
+        /// <summary>
+        /// The Hugging Face repository that contains the MiDaS ONNX exports.
+        /// </summary>
+        public static string RepoId(this ModelType model) {
+            if (model == ModelType.Unknown) {
+                throw new ArgumentException($"Unknown model type: {model}", nameof(model));
+            }
+
+            return RepositoryId;
         }
 
         /// <summary>
@@ -104,19 +111,10 @@ namespace Doji.AI.Depth {
         }
 
         /// <summary>
-        /// The location of the given <paramref name="model"/> in the Resources folder.
+        /// Repository-relative ONNX path for given <paramref name="model"/>.
         /// </summary>
-        public static string ResourcePath(this ModelType model) {
-            return Path.Combine("ONNX", model.FileName());
+        public static string RepoPath(this ModelType model) {
+            return $"onnx/{model.FileName()}.onnx";
         }
-
-#if UNITY_EDITOR
-        /// <summary>
-        /// The path to the given <paramref name="model"/> in the Packages folder.
-        /// </summary>
-        public static string AssetPath(this ModelType model) {
-            return Path.Combine("Packages", "com.doji.midas", "Runtime", "Resources", "ONNX", $"{model.FileName()}.onnx");
-        }
-#endif
     }
 }

@@ -2,8 +2,13 @@
   "dependencies": {
     "com.doji.chromatic": "file:../../../../com.doji.chromatic/com.doji.chromatic",
     "com.doji.midas": "file:../../../com.doji.midas",
+    "com.unity.ide.rider": "3.0.40",
     "com.unity.ide.visualstudio": "2.0.27",
-    "com.unity.ugui": "2.0.0",
+    "com.unity.ugui": "2.6.0",
+    "tools.doji.downloads": "file:../../../../tools.doji.downloads/tools.doji.downloads",
+    "tools.doji.formats.onnx": "file:../../../../tools.doji.formats.onnx/tools.doji.formats.onnx",
+    "tools.doji.hf-hub": "file:../../../../tools.doji.hf-hub/tools.doji.hf-hub",
+    "tools.doji.onnx-model-loader": "file:../../../../tools.doji.onnx-model-loader/tools.doji.onnx-model-loader",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -15,8 +20,11 @@
     "com.unity.modules.particlesystem": "1.0.0",
     "com.unity.modules.physics": "1.0.0",
     "com.unity.modules.physics2d": "1.0.0",
+    "com.unity.modules.physicscore2d": "1.0.0",
     "com.unity.modules.screencapture": "1.0.0",
+    "com.unity.modules.tetgen": "1.0.0",
     "com.unity.modules.tilemap": "1.0.0",
+    "com.unity.modules.timelinefoundation": "1.0.0",
     "com.unity.modules.ui": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0",
@@ -25,7 +33,9 @@
     "com.unity.modules.unitywebrequesttexture": "1.0.0",
     "com.unity.modules.unitywebrequestwww": "1.0.0",
     "com.unity.modules.video": "1.0.0",
-    "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "testables": [
+    "com.doji.midas"
+  ]
 }

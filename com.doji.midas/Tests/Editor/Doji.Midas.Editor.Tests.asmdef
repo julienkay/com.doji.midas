@@ -1,0 +1,25 @@
+{
+    "name": "Doji.Midas.Editor.Tests",
+    "rootNamespace": "Doji.AI.Depth.Editor.Tests",
+    "references": [
+        "Doji.Midas",
+        "Doji.ModelHub",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

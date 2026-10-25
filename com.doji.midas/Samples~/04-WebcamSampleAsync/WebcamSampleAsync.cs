@@ -21,10 +21,15 @@ namespace Doji.AI.Depth.Samples {
 
         private bool _paused;
 
-        public void Start() {
-            _midas = new Midas(Model) {
-                NormalizeDepth = true,
-            };
+        public async void Start() {
+            // Loads the model from HF Hub; a model that is downloaded at runtime is fetched first.
+            var midas = await Midas.CreateAsync(Model);
+            if (this == null) {
+                midas.Dispose();
+                return;
+            }
+            _midas = midas;
+            _midas.NormalizeDepth = true;
             Image.texture = _midas.Result;
 
             if (WebCamTexture.devices == null || WebCamTexture.devices.FirstOrDefault().Equals(default(WebCamDevice))) {
@@ -64,6 +69,8 @@ namespace Doji.AI.Depth.Samples {
                         _pointRenderer.MinPred = min;
                         _pointRenderer.MaxPred = max;
                     }
+                } else {
+                    yield return null;
                 }
             }
         }

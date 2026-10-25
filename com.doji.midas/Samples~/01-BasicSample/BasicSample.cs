@@ -17,8 +17,14 @@ namespace Doji.AI.Depth.Samples {
 
         public GameObject ExportButton;
 
-        public void Start () {
-            _midas = new Midas(Model);
+        public async void Start () {
+            // Loads the model from HF Hub; a model that is downloaded at runtime is fetched first.
+            var midas = await Midas.CreateAsync(Model);
+            if (this == null) {
+                midas.Dispose();
+                return;
+            }
+            _midas = midas;
         }
 
         private void OnDestroy() {
@@ -26,6 +32,10 @@ namespace Doji.AI.Depth.Samples {
         }
 
         public void EstimateDepth() {
+            if (_midas == null) {
+                Debug.LogWarning("The model is still loading.");
+                return;
+            }
             if (SampleImage == null) {
                 Debug.LogError("No input image found.");
                 return;

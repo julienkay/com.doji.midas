@@ -11,10 +11,15 @@ namespace Doji.AI.Depth.Samples {
         public DepthPointRenderer PointRendererPrefab;
         private DepthPointRenderer _pointRenderer;
 
-        private void Start() {
-            _midas = new Midas(Model) {
-                NormalizeDepth = false,
-            };
+        private async void Start() {
+            // Loads the model from HF Hub; a model that is downloaded at runtime is fetched first.
+            var midas = await Midas.CreateAsync(Model);
+            if (this == null) {
+                midas.Dispose();
+                return;
+            }
+            _midas = midas;
+            _midas.NormalizeDepth = false;
 
             _pointRenderer = Instantiate(PointRendererPrefab);
 

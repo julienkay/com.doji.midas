@@ -1,6 +1,6 @@
 # MiDaS Models
 
-There are variety of different MiDaS models available. To be able to use them with Unity Sentis, the official models were converted to ONNX using [this colab notebook][colab]. You'll find links to the pretrained models in ONNX format below or on the [GitHub Release page][gh_release].
+There are variety of different MiDaS models available. To be able to use them with Unity Sentis, the official models were converted to ONNX using [this colab notebook][colab]. The package loads them from [julienkay/sentis-MiDaS][hf_repo] through AI Model Hub (`tools.doji.hf-hub`).
 
 
 ## Overview
@@ -23,11 +23,9 @@ There are variety of different MiDaS models available. To be able to use them wi
 
 ## Get The Models
 
-To keep the package size reasonable, only the @Doji.AI.Depth.ModelType.midas_v21_small_256 model is included with the package when downloading from the Asset Store. To use other models you have to downloaded them first.
+The package lists `julienkay/sentis-MiDaS` in its `hf-hub-manifest.json`. `midas_v21_small_256` is required; every other model is an optional file, so each project downloads only the models it uses. Turn them on in `Window > AI Model Hub` under **Optional files**, then click **Download & Import**. See the [AI Model Hub manual][hf_hub_docs].
 
-When you create an instance of the @Doji.AI.Depth.Midas class you can pass the @Doji.AI.Depth.ModelType in the constructor to choose which model to use. In the Unity Editor if you're about to use a model that is not yet present, you will automatically be prompted to allow the file download.
-
-Otherwise you can always manually download the ONNX models from the links above and place them inside the Resources/ONNX folder.
+Pass the @Doji.AI.Depth.ModelType to @Doji.AI.Depth.Midas.CreateAsync* or to the constructor to choose the model. If the model is not included in the project, they throw an exception that names the model and its file.
 
 
 ## Which Model To Use
@@ -51,17 +49,18 @@ Judging the quality of a depth map from just a 2D image is hard. Consider using 
 ![samples](../images/model_samples.webp)
 
 [colab]: https://github.com/julienkay/com.doji.midas/blob/master/tools/MiDaS_ONNX_Export.ipynb
-[gh_release]: https://github.com/julienkay/com.doji.midas/releases/tag/v1.0.0
+[hf_repo]: https://huggingface.co/julienkay/sentis-MiDaS
+[hf_hub_docs]: https://docs.doji-tech.com/tools.doji.hf-hub/manual/getting-started-project-users.html
 [docs_official]: https://github.com/isl-org/MiDaS
-[1]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/midas_v21_small_256.onnx
-[2]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/midas_v21_384.onnx
-[3]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_beit_large_512.onnx
-[4]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_beit_large_384.onnx
-[5]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_beit_base_384.onnx
-[6]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_swin2_large_384.onnx
-[7]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_swin2_base_384.onnx
-[8]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_swin2_tiny_256.onnx
-[9]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_swin_large_384.onnx
-[10]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_next_vit_large_384.onnx
-[11]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_levit_224.onnx
-[12]: https://github.com/julienkay/com.doji.midas/releases/download/v1.0.0/dpt_large_384.onnx
+[1]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/midas_v21_small_256.onnx
+[2]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/midas_v21_384.onnx
+[3]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_beit_large_512.onnx
+[4]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_beit_large_384.onnx
+[5]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_beit_base_384.onnx
+[6]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_swin2_large_384.onnx
+[7]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_swin2_base_384.onnx
+[8]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_swin2_tiny_256.onnx
+[9]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_swin_large_384.onnx
+[10]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_next_vit_large_384.onnx
+[11]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_levit_224.onnx
+[12]: https://huggingface.co/julienkay/sentis-MiDaS/blob/main/onnx/dpt_large_384.onnx

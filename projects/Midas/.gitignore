@@ -89,3 +89,6 @@ Thumbs.db
 # custom #
 # ====== #
 /[Pp]ackages/[Cc]om.unity.asset-store-tools*
+
+# Rider
+.idea/

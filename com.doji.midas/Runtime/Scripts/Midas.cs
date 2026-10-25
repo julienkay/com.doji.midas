@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
+using Doji.AI.ModelHub;
+using Doji.Downloads;
 using Unity.InferenceEngine;
 using UnityEngine;
 
@@ -38,7 +41,7 @@ namespace Doji.AI.Depth {
                 if (_backend != value) {
                     Dispose();
                     _backend = value;
-                    InitializeNetwork();
+                    InitializeNetwork(_model);
                 }
             }
         }
@@ -94,24 +97,60 @@ namespace Doji.AI.Depth {
         /// </summary>
         private Tensor<float> _predictedDepth;
 
-#if UNITY_EDITOR
-        public static event Action<ModelType> OnModelRequested = (x) => {};
-#endif
-
         private bool _estimationRunning = false;
 
         /// <summary>
-        /// Initializes a new instance of MiDaS.
+        /// Initializes a new instance of MiDaS and loads the model without waiting.
         /// </summary>
-        public Midas(ModelType modelType = ModelType.midas_v21_small_256) {
+        /// <remarks>
+        /// The model comes from HF Hub (<c>tools.doji.hf-hub</c>). Loading without waiting works in the Editor and
+        /// for bundled models on Windows, macOS, Linux and iOS. On Android and the Web, or when the model is
+        /// downloaded at runtime, use <see cref="CreateAsync"/>.
+        /// </remarks>
+        public Midas(ModelType modelType = ModelType.midas_v21_small_256, BackendType backend = BackendType.GPUCompute) {
             _modelType = modelType;
+            _backend = backend;
             InitializeNetwork();
         }
 
-        public Midas(Model model) {
+        /// <summary>
+        /// Initializes a new instance of MiDaS with a model that you loaded yourself.
+        /// </summary>
+        public Midas(Model model, BackendType backend = BackendType.GPUCompute) {
             _modelType = ModelType.Unknown;
             _name = "unknown-midas";
+            _backend = backend;
             InitializeNetwork(model);
+        }
+
+        private Midas(ModelType modelType, Model model, BackendType backend) {
+            _modelType = modelType;
+            _name = modelType.FileName();
+            _backend = backend;
+            InitializeNetwork(model);
+        }
+
+        /// <summary>
+        /// Loads the model from HF Hub and creates a MiDaS instance. Works on every platform, and for
+        /// bundled and downloaded models. A downloaded model is fetched on first use.
+        /// </summary>
+        /// <param name="modelType">The MiDaS model to load. The project must include it in Model Hub.</param>
+        /// <param name="backend">The backend to run the model with.</param>
+        /// <param name="progress">Reports download progress when the model is downloaded at runtime.</param>
+        /// <param name="cancellationToken">Cancels the download.</param>
+        public static async Task<Midas> CreateAsync(
+            ModelType modelType = ModelType.midas_v21_small_256,
+            BackendType backend = BackendType.GPUCompute,
+            IProgress<DownloadProgress> progress = null,
+            CancellationToken cancellationToken = default) {
+
+            Model model;
+            try {
+                model = await Hub.LoadModelAsync(ModelExtensions.PackageId, modelType.RepoId(), modelType.RepoPath(), progress, cancellationToken);
+            } catch (Exception exception) when (!(exception is OperationCanceledException)) {
+                throw LoadException(modelType, exception);
+            }
+            return new Midas(modelType, model, backend);
         }
 
         private void InitializeNetwork() {
@@ -119,21 +158,22 @@ namespace Doji.AI.Depth {
                 throw new InvalidOperationException("Not a valid model type.");
             }
 
-#if UNITY_EDITOR
-            OnModelRequested?.Invoke(_modelType);
-#endif
+            _name = _modelType.FileName();
 
-            ModelAsset modelAsset = Resources.Load<ModelAsset>(_modelType.ResourcePath());
-            _name = modelAsset.name;
-
-            if (modelAsset == null) {
-                throw new Exception($"Could not load model file '{ModelType}' from Resources. Make sure the model exists in your project.");
+            Model model;
+            try {
+                model = Hub.LoadModel(ModelExtensions.PackageId, _modelType.RepoId(), _modelType.RepoPath());
+            } catch (Exception exception) {
+                throw LoadException(_modelType, exception);
             }
-
-            var model = ModelLoader.Load(modelAsset);
-            Resources.UnloadAsset(modelAsset);
-
             InitializeNetwork(model);
+        }
+
+        private static InvalidOperationException LoadException(ModelType modelType, Exception exception) {
+            return new InvalidOperationException(
+                $"Could not load MiDaS model '{modelType}' ({ModelExtensions.RepositoryId}:{modelType.RepoPath()}). " +
+                $"Include the file in the AI Model Hub window. {exception.Message}",
+                exception);
         }
 
         private void InitializeNetwork(Model model) {
@@ -254,10 +294,6 @@ namespace Doji.AI.Depth {
             CoroutineRunner.Start(_EstimateDepth(input, callback, numLayersPerFrame));
         }
 
-        private async Task Test() {
-            await Task.Delay(5000);
-        }
-
         /// <summary>
         /// Returns the minimum and maximum values of the last depth prediction.
         /// </summary>
@@ -309,10 +345,6 @@ namespace Doji.AI.Depth {
 #endif
             }
             _input?.Dispose();
-        }
-
-        public void EstimateDepth(Texture webCam, object onNewDepthPredicted) {
-            throw new NotImplementedException();
         }
     }
 }
