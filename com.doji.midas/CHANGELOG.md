@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Models come from the Hugging Face repository `julienkay/sentis-MiDaS` through AI Model Hub (`tools.doji.hf-hub`). The package no longer contains model files or downloads them from GitHub releases. Include the models you use in `Window > AI Model Hub`.
-- Requires Unity 6000.3 or later and Inference Engine 2.6.1.
+- Requires Unity 6000.3 or later and Sentis 2.6.1 (`com.unity.ai.inference`).
 - Changing `Backend` reuses the loaded model instead of loading it again.
 - The constructors take an optional `BackendType`.
 
